@@ -1,10 +1,12 @@
 #include <iostream>
 
+#include <omp.h>
 #include "PbaViewer.h"
 #include "PbaUtils.h"
 #include "things/RotatingCube.h"
 #include "things/BasicBoid.h"
 #include "things/BouncingBalls.h"
+#include "things/ParticleOnASphere.h"
 
 #define GLUT_DISABLE_ATEXIT_HACK
 #include <GL/glut.h>
@@ -12,23 +14,19 @@
 #include <vector>
 #include <String>
 
+#define _DEBUG
+//#define _CONST_AND_BOID
+
 int main(int argc, char* argv[]) {
 	using namespace pba;
 
 	PbaViewer* viewer = PbaViewer::Instance();
 
-	CollisionSurface cube = pba::GenerateCollisionCube(1.0);
-	{
-		cube->get_triangle(4)->set_invisable();
-		cube->get_triangle(5)->set_invisable();
-	}
-	CollisionSurface cubeS = pba::GenerateCollisionCube(0.15);
+	// Flocking and Constraint System
+	ConstraintAndBoidForceThing* parOnSph = new ConstraintAndBoidForceThing(0.1, 1.0, 1.0, 10, 5.0, 3.0, 5.0);
+	PbaThing assignment = PbaThing(parOnSph);
 
-	BouncingBallsThing* BouncingBalls = new BouncingBallsThing;
-	BouncingBalls->AddCollisionSurface(cube, cubeS);
-	PbaThing balls = PbaThing(BouncingBalls);
-
-	viewer->AddThing(balls);
+	viewer->AddThing(assignment);
 	std::vector<string> vec;
 	for (int i = 0; i < argc; i++ ){
 		vec.push_back(argv[i]);

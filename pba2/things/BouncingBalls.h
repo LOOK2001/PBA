@@ -37,7 +37,7 @@ namespace pba {
 		{
 			state = CreateDynamicalState(name + "DynamicalData");
 			state->add(1);
-			force = CreateSimpleGravityForce(pba::Vector(0, -1.0f, 0));
+			force = CreateSimpleGravityForce(pba::Vector(0.0, -1.0, 0.0));
 			GISolver solvera = CreateAdvancePosition(state, collisions);
 			GISolver solverb = CreateAdvanceVelocity(state, force);
 			solver = CreateLeapFrogSolver(solvera, solverb);

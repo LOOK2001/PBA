@@ -10,7 +10,7 @@ void pba::AdvancePosition::init() { return; }
 
 void pba::AdvancePosition::solve(const double dt)
 {
-#pragma omp parallel for
+//#pragma omp parallel for
 	for (int i = 0; i < PQ->nb(); i++)
 	{
 		PQ->set_pos(i, PQ->pos(i) + PQ->vel(i) * dt);
@@ -87,7 +87,7 @@ void pba::AdvanceVelocityWithConstraint::solve(const double dt)
 	// compute Gravity acceleration OR Boid Force acceleration
 	force->compute(PQ, dt);
 
-#pragma omp parallel for
+//#pragma omp parallel for
 	for (int i = 0; i < PQ->nb(); i++)	
 	{
 		 double Nsqr = C->compute(PQ, i);

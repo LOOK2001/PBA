@@ -18,6 +18,9 @@
     <Filter Include="things">
       <UniqueIdentifier>{8ac578ea-7fab-46f2-bead-25323d44b8b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{f6a1415c-6a39-468f-bd8a-d81f038d63df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,6 +76,12 @@
     </ClCompile>
     <ClCompile Include="base\ConstraintLibrary.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="common\ObjParser.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\AsciiParser.cpp">
+      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,5 +147,14 @@
     <ClInclude Include="things\BasicBoid.h" />
     <ClInclude Include="include\drand48.h" />
     <ClInclude Include="things\ParticleOnASphere.h" />
+    <ClInclude Include="include\SPHState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="common\AsciiParser.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ObjParser.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
