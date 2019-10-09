@@ -3,7 +3,6 @@
 
 pba::AABB::AABB(const Vector& lc, const Vector& uc)
 {
-	assert(lc < uc);
 	llc = lc;
 	urc = uc;
 }
@@ -42,41 +41,31 @@ void pba::AABB::split(const int component, AABB& aabb1, AABB& aabb2) const
 
 const double pba::AABB::intersect(const Vector& start, const Vector& dir) const
 {
-	double tmin, tmax, tymin, tymax, tzmin, tzmax, divx, divy, divz;
-	divx = 1 / dir.X();
-	divy = 1 / dir.Y();
-	divz = 1 / dir.Z();
-	if (divx >= 0){
-		tmin = (llc.X() - start.X()) * divx;
-		tmax = (urc.X() - start.X()) * divx;
-	}
-	else {
-		tmin = (urc.X() - start.X()) * divx;
-		tmax = (llc.X() - start.X()) * divx;
-	}
-	if (divy >= 0)
-	{
-		tymin = (llc.Y() - start.Y()) * divy;
-		tymax = (urc.Y() - start.Y()) * divy;
-	}
-	else {
-		tymin = (urc.Y() - start.Y()) * divy;
-		tymax = (llc.Y() - start.Y()) * divy;
-	}
+	double tmin, tmax, tymin, tymax, tzmin, tzmax;
+
+	Vector invdir = Vector(1 / dir.X(), 1 / dir.Y(), 1 / dir.Z());
+	int sign[3];
+	sign[0] = (invdir[0] < 0);
+	sign[1] = (invdir[1] < 0);
+	sign[2] = (invdir[2] < 0);
+
+	Vector bounds[2]{ llc, urc };
+
+	tmin = (bounds[sign[0]].X() - start.X()) * invdir.X();
+	tmax = (bounds[1 - sign[0]].X() - start.X()) * invdir.X();
+	tymin = (bounds[sign[1]].Y() - start.Y()) * invdir.Y();
+	tymax = (bounds[1 - sign[1]].Y() - start.Y()) * invdir.Y();
+
 	if ((tmin > tymax) || (tymin > tmax))
 		return false;
 	if (tymin > tmin)
 		tmin = tymin;
 	if (tymax < tmax)
 		tmax = tymax;
-	if (divz >= 0){
-		tzmin = (llc.Z() - start.Z()) * divz;
-		tzmax = (urc.Z() - start.Z()) * divz;
-	}
-	else {
-		tzmin = (urc.Z() - start.Z()) * divz;
-		tzmax = (llc.Z() - start.Z()) * divz;
-	}
+
+	tzmin = (bounds[sign[2]].Z() - start.Z()) * invdir.Z();
+	tzmax = (bounds[1 - sign[2]].Z() - start.Z()) * invdir.Z();
+
 	if ((tmin > tzmax) || (tzmin > tmax))
 		return false;
 	if (tzmin > tmin)
@@ -84,5 +73,13 @@ const double pba::AABB::intersect(const Vector& start, const Vector& dir) const
 	if (tzmax < tmax)
 		tmax = tzmax;
 
-	return tmin;
+	if (tmin < 0 && tmax < 0)
+	{
+		return tmin;
+	}
+	if (tmin > 0 && tmax > 0)
+	{
+		return tmin;
+	}
+	return tmax;
 }

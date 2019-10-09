@@ -15,7 +15,10 @@ namespace pba
 	{
 	public:
 		CollisionHandler() {}
-		virtual ~CollisionHandler() {}
+		virtual ~CollisionHandler() {
+			if (tree)
+				delete tree;
+		}
 
 		virtual void handle_collisions(const double dt, DynamicalState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
 		//virtual void handle_collisions(const double dt, RigidBodyState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };

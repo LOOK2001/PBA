@@ -3,7 +3,29 @@
 void pba::CollisionHandler::set_collision_surface(CollisionSurface& c)
 {
 	surf = c;
-	usetree = false;
+	usetree = true;
+
+	if (!c->triangle_size())
+		return;
+
+	Vector llc = c->get_triangle(0)->vertex(0), urc = c->get_triangle(0)->vertex(0);
+
+	for (int i = 1; i < c->triangle_size(); i++) {
+		for (int j = 0; j < 3; j++)	{
+
+			const Vector& point = c->get_triangle(i)->vertex(j);
+
+			for (int k = 0; k < 3; k++) {
+				if (point[k] < llc[k])
+					llc[k] = point[k];
+				else if (point[k] > urc[k])
+					urc[k] = point[k];
+			}
+		}
+	}
+
+	tree = new TraceTree(llc, urc, 0, 5, 12);
+	tree->addObject(surf);
 }
 
 void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalState& S)
@@ -40,31 +62,24 @@ void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalS
 		{
 			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
 
-			tree->addObject(surf);
-			if (tree->hit(S->pos(i), S->vel(i), dt, CD))
+			// check intersection with top bounding box
+			tree->Divide();
+			while (tree->hit(S->pos(i), S->vel(i), CD.t, CD))
 			{
+				Vector v = S->vel(i);
+				Vector norm = CD.tri->N();
+				vn = norm * S->vel(i);
+				vp = S->vel(i) - norm * vn;
+				vr = (surf->coeff_sticky() * vp) - (surf->coeff_restitution() * norm * vn);
 
+				// set new point
+				Vector xc = S->pos(i) - (S->vel(i) * CD.t);
+				Vector x = xc + vr * CD.t;
+				S->set_pos(i, x);
+
+				// set reflective velocity
+				S->set_vel(i, vr);
 			}
 		}
 	}
-
-// 			bool flag = surf->hit(S->pos(i), S->vel(i), dt, CD);
-// 			while (flag)
-// 			{
-// 				Vector v = S->vel(i);
-// 				Vector norm = CD.tri->N();
-// 				vn = norm * S->vel(i);
-// 				vp = S->vel(i) - norm * vn;
-// 				vr = (surf->coeff_sticky() * vp) - (surf->coeff_restitution() * norm * vn);
-// 
-// 				// set new point
-// 				Vector xc = S->pos(i) - (S->vel(i) * CD.t);
-// 				Vector x = xc + vr * CD.t;
-// 				S->set_pos(i, x);
-// 
-// 				// set reflective velocity
-// 				S->set_vel(i, vr);
-// 
-// 				flag = surf->hit(S->pos(i), S->vel(i), CD.t, CD);
-// 			}
 }

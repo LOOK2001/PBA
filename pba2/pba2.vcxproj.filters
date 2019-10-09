@@ -9,9 +9,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\base">
-      <UniqueIdentifier>{bb1703bc-9617-4bca-add8-4788a14ccfed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include">
       <UniqueIdentifier>{7c7c0743-c265-4459-b2cb-26fbfd607336}</UniqueIdentifier>
     </Filter>
@@ -21,67 +18,70 @@
     <Filter Include="common">
       <UniqueIdentifier>{f6a1415c-6a39-468f-bd8a-d81f038d63df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{bb1703bc-9617-4bca-add8-4788a14ccfed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="base\DynamicalState.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\LinearAlgebra.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\Matrix.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\PbaThing.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\PbaViewer.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\ExplicitDynamics.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\AABB.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\ForceLibrary.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\GISolver.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\CollisionHandler.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\CollisionSurface.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\PbaUtils.cpp">
-      <Filter>源文件\base</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\CollisionTriangle.cpp">
-      <Filter>源文件\base</Filter>
-    </ClCompile>
-    <ClCompile Include="base\ParticleEmitter.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="base\TraceTree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="base\Constraint.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="base\ConstraintLibrary.cpp">
-      <Filter>源文件</Filter>
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="common\ObjParser.cpp">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="common\AsciiParser.cpp">
       <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Constraint.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\ConstraintLibrary.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\ParticleEmitter.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\TraceTree.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,11 +142,6 @@
     <ClInclude Include="include\PbaUtils.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\TraceTree.h" />
-    <ClInclude Include="include\ConstraintLibrary.h" />
-    <ClInclude Include="things\BasicBoid.h" />
-    <ClInclude Include="include\drand48.h" />
-    <ClInclude Include="things\ParticleOnASphere.h" />
     <ClInclude Include="include\SPHState.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -155,6 +150,24 @@
     </ClInclude>
     <ClInclude Include="common\ObjParser.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="things\SphInATeapot.h">
+      <Filter>things</Filter>
+    </ClInclude>
+    <ClInclude Include="things\ParticleOnASphere.h">
+      <Filter>things</Filter>
+    </ClInclude>
+    <ClInclude Include="things\BasicBoid.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ConstraintLibrary.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\drand48.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TraceTree.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

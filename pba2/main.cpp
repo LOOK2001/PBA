@@ -5,6 +5,7 @@
 #include "things/RotatingCube.h"
 #include "things/BasicBoid.h"
 #include "things/BouncingBalls.h"
+#include "things/SphInATeapot.h"
 
 #define GLUT_DISABLE_ATEXIT_HACK
 #include <GL/glut.h>
