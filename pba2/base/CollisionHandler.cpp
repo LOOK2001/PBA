@@ -3,7 +3,7 @@
 void pba::CollisionHandler::set_collision_surface(CollisionSurface& c)
 {
 	surf = c;
-	usetree = true;
+	usetree = false;
 
 	if (!c->triangle_size())
 		return;
@@ -63,7 +63,6 @@ void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalS
 			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
 
 			// check intersection with top bounding box
-			tree->Divide();
 			while (tree->hit(S->pos(i), S->vel(i), CD.t, CD))
 			{
 				Vector v = S->vel(i);

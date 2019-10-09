@@ -38,7 +38,7 @@ void pba::TraceTree::Divide()
 	node2 = new TraceTree(aabb2.LLC(), aabb2.URC(), level+1, max_levels, min_objects);
 
 	// add triangles to divided box
-	for (int i = 0; i < object_list.size(); i++)
+	for (int i = object_list.size(); i > 0; i--)
 	{
 		int tmpTri1 = -1, tmpTri2 = -1;
 		for (int j = 0; j < 3; j++)
@@ -61,6 +61,7 @@ void pba::TraceTree::Divide()
 				}	
 			}
 		}
+		object_list.pop_back();
 	}
 }
 
@@ -77,7 +78,7 @@ void pba::TraceTree::addObject(CollisionTriangle& s)
 	object_list.push_back(s);
 }
 
-bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const
+bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t)
 {
 
 	double _t = aabb.intersect((P - V * tmax), V);
@@ -118,6 +119,7 @@ bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, Co
 		}
 		else // check intersection with child bounding box 
 		{	
+			Divide();
 			node1->Divide();
 			node2->Divide();
 			if (!node1->hit(P, V, tmax, t) && !node2->hit(P, V, tmax, t))
