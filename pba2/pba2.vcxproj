@@ -141,16 +141,21 @@
     <ClCompile Include="base\GISolver.cpp" />
     <ClCompile Include="base\LinearAlgebra.cpp" />
     <ClCompile Include="base\Matrix.cpp" />
+    <ClCompile Include="base\OccupancyVolume.cpp" />
     <ClCompile Include="base\ParticleEmitter.cpp" />
     <ClCompile Include="base\PbaThing.cpp" />
     <ClCompile Include="base\PbaUtils.cpp" />
     <ClCompile Include="base\PbaViewer.cpp" />
+    <ClCompile Include="base\SPHForce.cpp" />
+    <ClCompile Include="base\SPHSolver.cpp" />
+    <ClCompile Include="base\SPHState.cpp" />
     <ClCompile Include="base\TraceTree.cpp" />
     <ClCompile Include="common\AsciiParser.cpp" />
     <ClCompile Include="common\ObjParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="base\SPHForce.h" />
     <ClInclude Include="common\AsciiParser.h" />
     <ClInclude Include="common\ObjParser.h" />
     <ClInclude Include="include\AABB.h" />
@@ -167,10 +172,12 @@
     <ClInclude Include="include\GISolver.h" />
     <ClInclude Include="include\LinearAlgebra.h" />
     <ClInclude Include="include\Matrix.h" />
+    <ClInclude Include="include\OccupancyVolume.h" />
     <ClInclude Include="include\ParticleEmitter.h" />
     <ClInclude Include="include\PbaThing.h" />
     <ClInclude Include="include\PbaUtils.h" />
     <ClInclude Include="include\PbaViewer.h" />
+    <ClInclude Include="include\SPHSolver.h" />
     <ClInclude Include="include\SPHState.h" />
     <ClInclude Include="include\TraceTree.h" />
     <ClInclude Include="include\Vector.h" />
