@@ -29,6 +29,7 @@ namespace pba
 		~AccumulatingForce() {}
 
 		void compute(pba::DynamicalState& pq, const double dt);
+		void compute(pba::SPHState& s, const double dt);
 
 		void add(Force& f);
 
@@ -107,6 +108,28 @@ namespace pba
 	private:
 	};
 	pba::Force CreateAccumulatingRandomBoidForce();
+
+	class AccumulatingGravityForce : public pba::ForceBase
+	{
+	public:
+		AccumulatingGravityForce(const Vector& g) :
+			G(g)
+		{}
+		~AccumulatingGravityForce() {};
+
+		void compute(pba::DynamicalState& pq, const double dt);
+		void compute(SPHState& s, const double dt)
+		{
+			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, SPHStateData>(s);
+			compute(ss, dt);
+		}
+		void set_strength(const double v) { G *= v / G.magnitude(); };
+		const double get_strength() const { return G.magnitude(); };
+
+	private:
+		Vector G;
+	};
+	pba::Force CreateAccumulatingGravityForce(const Vector& G);
 }
 
 #endif

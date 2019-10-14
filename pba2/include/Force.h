@@ -2,6 +2,7 @@
 #define __PBA_FORCE_H__
 
 #include "DynamicalState.h"
+#include "SPHState.h"
 #include <iostream>
 
 namespace pba

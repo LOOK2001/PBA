@@ -155,7 +155,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="base\SPHForce.h" />
     <ClInclude Include="common\AsciiParser.h" />
     <ClInclude Include="common\ObjParser.h" />
     <ClInclude Include="include\AABB.h" />
@@ -177,6 +176,7 @@
     <ClInclude Include="include\PbaThing.h" />
     <ClInclude Include="include\PbaUtils.h" />
     <ClInclude Include="include\PbaViewer.h" />
+    <ClInclude Include="include\SPHForce.h" />
     <ClInclude Include="include\SPHSolver.h" />
     <ClInclude Include="include\SPHState.h" />
     <ClInclude Include="include\TraceTree.h" />

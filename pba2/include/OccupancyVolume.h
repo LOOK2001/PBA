@@ -11,7 +11,7 @@ namespace pba
 	public:
 		OccupancyVolume(const AABB& aabb, const double h);
 		OccupancyVolume(const OccupancyVolume& o);
-		~OccupancyVolume();
+		~OccupancyVolume() {};
 
 		OccupancyVolume& operator=(const OccupancyVolume& o);
 
@@ -39,9 +39,9 @@ namespace pba
 		AABB bounds;
 		double cellsize;
 		size_t nx, ny, nz;
-		std::vector< std::vector<size_t> > contents;
-		std::vector< Vector > center_of_mass;
-		std::vector< double > total_mass;
+		std::vector<std::vector<size_t>> contents;
+		std::vector<Vector> center_of_mass;
+		std::vector<double> total_mass;
 
 		void compute_size();
 	};

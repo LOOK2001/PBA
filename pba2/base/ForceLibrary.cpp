@@ -1,4 +1,5 @@
 #include "ForceLibrary.h"
+#include "SPHForce.h"
 #include "PbaUtils.h"
 
 void pba::SimpleGravityForce::compute(pba::DynamicalState& pq, const double dt)
@@ -19,7 +20,23 @@ pba::Force pba::CreateSimpleGravityForce(const Vector& G)
 void pba::AccumulatingForce::compute(pba::DynamicalState& pq, const double dt)
 {
 	for (auto f : forces)
+	{
+		std::shared_ptr<SPHForce> SPHF = std::dynamic_pointer_cast<SPHForce>(f);
+		if (SPHF)
+			continue;
 		f->compute(pq, dt);
+	}
+}
+
+void pba::AccumulatingForce::compute(pba::SPHState& s, const double dt)
+{
+	for (auto f : forces)
+	{
+		std::shared_ptr<SPHForce> SPHF = std::dynamic_pointer_cast<SPHForce>(f);
+		if (!SPHF)
+			continue;
+		SPHF->compute(s, dt);
+	}
 }
 
 void pba::AccumulatingForce::add(Force& f)
@@ -137,4 +154,20 @@ void pba::AccumulatingRandomBoidForce::compute(pba::DynamicalState& pq, const do
 pba::Force pba::CreateAccumulatingRandomBoidForce()
 {
 	return pba::Force(new pba::AccumulatingRandomBoidForce());
+}
+
+void pba::AccumulatingGravityForce::compute(pba::DynamicalState& pq, const double dt)
+{
+//#pragma omp parallel for
+	for (int i = 0; i < pq->nb(); i++)
+	{
+		Vector a = pq->accel(i);
+		pq->set_accel(i, pq->accel(i) + (G / pq->mass(i)));
+		a = pq->accel(i);
+	}
+}
+
+pba::Force pba::CreateAccumulatingGravityForce(const Vector& G)
+{
+	return Force(new AccumulatingGravityForce(G));
 }

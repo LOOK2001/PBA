@@ -23,10 +23,9 @@ int main(int argc, char* argv[]) {
 		cube->get_triangle(4)->set_invisable();
 		cube->get_triangle(5)->set_invisable();
 	}
-	CollisionSurface cubeS = pba::GenerateCollisionCube(0.15);
 
-	BouncingBallsThing* BouncingBalls = new BouncingBallsThing;
-	BouncingBalls->AddCollisionSurface(cube, cubeS);
+	SphInATeapotThing* BouncingBalls = new SphInATeapotThing;
+	BouncingBalls->AddCollisionSurface(cube);
 	PbaThing balls = PbaThing(BouncingBalls);
 
 	viewer->AddThing(balls);

@@ -2,10 +2,10 @@
 #include "Color.h"
 #include "PbaThing.h"
 #include "DynamicalState.h"
-//#include "SPHSolver.h"
+#include "SPHSolver.h"
 //#include "RK4.h"
 #include "ForceLibrary.h"
-//#include "SPHForce.h"
+#include "SPHForce.h"
 #include "CollisionSurface.h"
 #include "CollisionHandler.h"
 #include "ParticleEmitter.h"
@@ -35,14 +35,102 @@ namespace pba {
 			PbaThingyDingy(nam),
 			emit(false),
 			box(pba::makeCollisionSurface()),
-			emitter(ParticleEmitter(Vector(50.5, -10.0, 1.5), Vector(-1.0, 0, 0), 2.5, 10.0))
+			emitter(ParticleEmitter(Vector(0.0, 0.0, 0.0), Vector(-1.0, 0, 0), 0.05, 10.0))
 		{
+			AABB bounds(Vector(-3, -3, -3), Vector(3, 3, 3));
+			double h = 3.0 / 200.0;
+			state = CreateSPH(bounds, h, name + "DynamicalData");
+			//state->add(280000/10);
 
+			force = CreateAccumulatingForce();
+			gravityforce = CreateAccumulatingGravityForce(pba::Vector(0, -1.0, 0));
+			sphforce = CreateSPHForce();
+
+			std::shared_ptr<AccumulatingForce> f = dynamic_pointer_cast<AccumulatingForce>(force);
+			f->add(gravityforce);
+			f->add(sphforce);
+			solvera = CreateAdvancePosition(state, collisions);
+			solverb = CreateAdvanceVelocity(state, force, 5.6, 120.0);
+			//solver = CreateForwardEulerSolver(solvera,solverb);
+			solver = CreateLeapFrogSolver(solvera, solverb);
+			//solver = CreateGISolverSixthOrder(solver);
+			Reset();
+			std::cout << name << " constructed\n";
 		}
 		~SphInATeapotThing() {}
+
+		// Callback functions
+		void Display()
+		{
+			pba::Display(box);
+
+			glPointSize(3.5);
+			glBegin(GL_POINTS);
+			for (size_t i = 0; i < state->nb(); i++)
+			{
+				const Color& ci = state->ci(i);
+				const pba::Vector& v = state->pos(i);
+				glColor3f(ci.red(), ci.green(), ci.blue());
+				glVertex3f(v.X(), v.Y(), v.Z());
+			}
+			glEnd();
+		};
+
+		void Keyboard(unsigned char key, int x, int y)
+		{
+			PbaThingyDingy::Keyboard(key, x, y);
+			if (key == 'v') { box->toggle_visible(); }
+			if (key == 'w') { box->toggle_wireframe(); }
+			if (key == 'e') { emit = !emit; }
+		}
+
+		void solve()
+		{
+			if (emit)
+			{
+				int nbincrease = 50;
+				state->add(nbincrease);
+				std::cout << "Emit: Total Points " << state->nb() << std::endl;
+//#pragma omp parallel for
+				for (size_t i = state->nb() - nbincrease; i < state->nb(); i++)
+				{
+					Vector P, V;
+					Color C;
+//#pragma omp critical
+					{
+						emitter.emit(P, V, C);
+					}
+					C[0] = 0.8 + 0.2 * C[0];
+
+					//P = Vector(0.0, 0.0, 0.0);
+					V = Vector(0.0, 0.0, 0.0);
+
+					state->set_pos(i, P);
+					state->set_vel(i, V);
+					state->set_ci(i, C);
+				}
+				emit = !emit;
+			}
+			solver->solve(dt);
+		};
+
+		void Reset()
+		{
+			//state->clear();
+		}
+
+		void AddCollisionSurface(pba::CollisionSurface& s)
+		{
+			std::cout << "Add CollisionSurface\n";
+			//std::cout << "AABB: [" << s->aabb().LLC().X() << ", " << s->aabb().LLC().Y() << ", " << s->aabb().LLC().Z() << "] X [" << s->aabb().URC().X() << ", " << s->aabb().URC().Y() << ", " << s->aabb().URC().Z() << "]" << std::endl;
+			box = s;
+			collisions.set_collision_surface(box);
+		}
+
 	private:
 		bool emit;
 
+		pba::SPHState state;
 		pba::Force force;
 		pba::Force sphforce;
 		pba::Force gravityforce;

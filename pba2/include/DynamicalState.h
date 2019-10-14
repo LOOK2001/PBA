@@ -19,6 +19,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <assert.h>
 
 
 namespace pba

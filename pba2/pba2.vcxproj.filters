@@ -83,6 +83,18 @@
     <ClCompile Include="base\TraceTree.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="base\SPHState.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\SPHSolver.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\OccupancyVolume.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\SPHForce.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Color.h">
@@ -167,6 +179,15 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\TraceTree.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SPHSolver.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OccupancyVolume.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SPHForce.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
