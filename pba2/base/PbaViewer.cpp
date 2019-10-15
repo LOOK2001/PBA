@@ -91,7 +91,7 @@ PbaViewer::PbaViewer() :
    title          ( string("PBA Viewer") ),
    mouse_x        ( 0 ),
    mouse_y        ( 0 ),
-   camera_fov     (35.0), // 120
+   camera_fov     (35.0), // 120, 35.0
    camera_aspect  (1.0),
    camera_near    (0.01),
    camera_far     (10000.0),
@@ -190,6 +190,8 @@ void PbaViewer::Reshape( int w, int h )
 
 void PbaViewer::Keyboard( unsigned char key, int x, int y )
 {
+	keystate = glutGetModifiers();
+
    switch (key)
    {
       case 'f':
@@ -201,10 +203,14 @@ void PbaViewer::Keyboard( unsigned char key, int x, int y )
 	 break;
       case '+':
       case '=':
+		  if (keystate == GLUT_ACTIVE_SHIFT)
+			  ComputeEyeShift(7.0);
          ComputeEyeShift(0.07);
          break;
       case '-':
       case '_':
+		  if (keystate == GLUT_ACTIVE_SHIFT)
+			  ComputeEyeShift(-7.0);
          ComputeEyeShift(-0.07);
          break;
       case 'r':

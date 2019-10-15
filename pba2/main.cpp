@@ -6,6 +6,7 @@
 #include "things/BasicBoid.h"
 #include "things/BouncingBalls.h"
 #include "things/SphInATeapot.h"
+#include "common/ObjParser.h"
 
 #define GLUT_DISABLE_ATEXIT_HACK
 #include <GL/glut.h>
@@ -24,8 +25,14 @@ int main(int argc, char* argv[]) {
 		cube->get_triangle(5)->set_invisable();
 	}
 
+	ObjParser* objReader = new ObjParser();
+	objReader->ParseFile("C:/Xicheng/MyLife/College/Code/PBA/pba2/pba2/common/utah_teapot.obj");
+	CollisionSurface surf = makeCollisionSurface();
+	objReader->Fill(surf);
+	surf->toggle_wireframe();
+
 	SphInATeapotThing* BouncingBalls = new SphInATeapotThing;
-	BouncingBalls->AddCollisionSurface(cube);
+	BouncingBalls->AddCollisionSurface(surf);
 	PbaThing balls = PbaThing(BouncingBalls);
 
 	viewer->AddThing(balls);

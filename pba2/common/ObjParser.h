@@ -10,8 +10,6 @@ using namespace std;
 
 namespace pba
 {
-
-
 	class ObjParser
 	{
 	public:
@@ -48,6 +46,7 @@ namespace pba
 		AsciiParser parser;
 		int nb_vertices;
 		int nb_faces;
+		meshData mesh;
 	};
 }
 

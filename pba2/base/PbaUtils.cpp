@@ -18,6 +18,13 @@ void pba::AddCollisionSurface(CollisionSurface& s, PbaThing& p)
 
 void pba::Display(CollisionSurface& s)
 {
+	
+	if (s->use_wireframe())
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
+
+	
 	glBegin(GL_TRIANGLES);
 	for (size_t i = 0; i < s->triangle_size(); i++)
 	{
@@ -29,15 +36,15 @@ void pba::Display(CollisionSurface& s)
 
 		pba::Vector v = s->get_triangle(i)->vertex(0);
 		glVertex3f(v.X(), v.Y(), v.Z());
-		glNormal3f(v.X(), v.Y(), v.Z());
+		//glNormal3f(v.X(), v.Y(), v.Z());
 
 		v = s->get_triangle(i)->vertex(1);
 		glVertex3f(v.X(), v.Y(), v.Z());
-		glNormal3f(v.X(), v.Y(), v.Z());
+		//glNormal3f(v.X(), v.Y(), v.Z());
 
 		v = s->get_triangle(i)->vertex(2);
 		glVertex3f(v.X(), v.Y(), v.Z());
-		glNormal3f(v.X(), v.Y(), v.Z());
+		//glNormal3f(v.X(), v.Y(), v.Z());
 	}
 	glEnd();
 	return;

@@ -43,7 +43,7 @@ namespace pba {
 			//state->add(280000/10);
 
 			force = CreateAccumulatingForce();
-			gravityforce = CreateAccumulatingGravityForce(pba::Vector(0, -1.0, 0));
+			gravityforce = CreateAccumulatingGravityForce(pba::Vector(0, -10.0, 0));
 			sphforce = CreateSPHForce();
 
 			std::shared_ptr<AccumulatingForce> f = dynamic_pointer_cast<AccumulatingForce>(force);
@@ -110,7 +110,7 @@ namespace pba {
 					C[0] = 0.8 + 0.2 * C[0];
 
 					//P = Vector(0.0, 0.0, 0.0);
-					V = Vector(0.0, 0.0, 0.0);
+					//V = Vector(0.0, 0.0, 0.0);
 
 					state->set_pos(i, P);
 					state->set_vel(i, V);
