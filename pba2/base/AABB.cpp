@@ -39,6 +39,16 @@ void pba::AABB::split(const int component, AABB& aabb1, AABB& aabb2) const
 	}
 }
 
+const bool pba::AABB::isInside(const Vector& P) const
+{
+	pba::Vector min = llc;
+	pba::Vector max = urc;
+
+	return(P.X() >= min.X() && P.X() <= max.X() &&
+		P.Y() >= min.Y() && P.Y() <= max.Y() &&
+		P.Z() >= min.Z() && P.Z() <= max.Z());
+}
+
 const double pba::AABB::intersect(const Vector& start, const Vector& dir) const
 {
 	double tmin, tmax, tymin, tymax, tzmin, tzmax;

@@ -38,13 +38,13 @@ void pba::TraceTree::Divide()
 	node2 = new TraceTree(aabb2.LLC(), aabb2.URC(), level+1, max_levels, min_objects);
 
 	// add triangles to divided box
-	for (int i = object_list.size(); i > 0; i--)
+	for (int i = object_list.size()-1; i >= 0; i--)
 	{
 		int tmpTri1 = -1, tmpTri2 = -1;
 		for (int j = 0; j < 3; j++)
 		{
 			const Vector& _p = object_list[i]->vertex(j);
-			if (isPointInsideAABB(aabb1, _p))
+			if (aabb1.isInside(_p))
 			{
 				if (!(tmpTri1 == i))
 				{
@@ -52,7 +52,7 @@ void pba::TraceTree::Divide()
 					tmpTri1 = i;
 				}
 			}
-			if (isPointInsideAABB(aabb2, _p))
+			if (aabb2.isInside(_p))
 			{
 				if (!(tmpTri2 == i))
 				{
@@ -61,7 +61,11 @@ void pba::TraceTree::Divide()
 				}	
 			}
 		}
-		object_list.pop_back();
+		//object_list.pop_back();
+	}
+	if (level != 0)
+	{
+		object_list.clear();
 	}
 }
 
@@ -120,10 +124,10 @@ bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, Co
 		else // check intersection with child bounding box 
 		{	
 			Divide();
-			node1->Divide();
-			node2->Divide();
 			if (!node1->hit(P, V, tmax, t) && !node2->hit(P, V, tmax, t))
 				return false;
+// 			node1->Divide();
+// 			node2->Divide();
 		}
 	}
 	else{

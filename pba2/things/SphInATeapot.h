@@ -38,7 +38,7 @@ namespace pba {
 			emitter(ParticleEmitter(Vector(0.0, 0.0, 0.0), Vector(-1.0, 0, 0), 0.05, 10.0))
 		{
 			AABB bounds(Vector(-3, -3, -3), Vector(3, 3, 3));
-			double h = 3.0 / 200.0;
+			double h = 0.5/*3.0 / 200.0*/;
 			state = CreateSPH(bounds, h, name + "DynamicalData");
 			//state->add(280000/10);
 
@@ -56,6 +56,13 @@ namespace pba {
 			//solver = CreateGISolverSixthOrder(solver);
 			Reset();
 			std::cout << name << " constructed\n";
+
+			double test1 = (-1.0 / 0.0) * 0.0;
+			double test2 = test1 * 0.0;
+			if (isnan(test1))
+			{
+				int test3 = 123;
+			}
 		}
 		~SphInATeapotThing() {}
 

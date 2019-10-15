@@ -24,7 +24,15 @@ void pba::AdvanceSPHVelocity::solve(const double dt)
 	// update velocity
 	for (int i = 0; i < PQ->nb(); i++)
 	{
-		PQ->set_vel(i, PQ->vel(i) + PQ->accel(i) * dt);
+		if (PQ->accel(i).magnitude() > acceleration_clamp)
+			PQ->set_accel(i, PQ->accel(i).unitvector() * acceleration_clamp);
+
+		Vector _v = PQ->vel(i) + PQ->accel(i) * dt;
+		if (_v.magnitude() > velocity_clamp)
+			PQ->set_vel(i, _v.unitvector() * velocity_clamp);
+		else
+			PQ->set_vel(i, _v);
+		//PQ->set_vel(i, PQ->vel(i) + PQ->accel(i) * dt);
 	}
 }
 

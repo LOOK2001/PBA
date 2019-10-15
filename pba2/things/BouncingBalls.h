@@ -181,6 +181,13 @@ namespace pba {
 			collisions.set_collision_surface(box);
 		}
 
+		void AddCollisionSurface(pba::CollisionSurface& s)
+		{
+			std::cout << "Add CollisionSurface\n";
+			box = s;
+			collisions.set_collision_surface(box);
+		}
+
 	private:
 		bool emit;
 

@@ -3,7 +3,7 @@
 void pba::CollisionHandler::set_collision_surface(CollisionSurface& c)
 {
 	surf = c;
-	usetree = false;
+	usetree = true;
 
 	if (!c->triangle_size())
 		return;

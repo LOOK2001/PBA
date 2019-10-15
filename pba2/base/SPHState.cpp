@@ -1,5 +1,6 @@
 #include "SPHState.h"
 #include <assert.h>
+#include <math.h>
 
 #define PI 3.1415926535897932384626433832795
 
@@ -30,7 +31,7 @@ const float pba::SPHStateData::weight(size_t p, const Vector& P) const
 	else if (r >= 2*h)
 		return 0.0f;
 
-	assert(r < 0.0f);
+	//assert(r < 0.0f);
 }
 
 const pba::Vector pba::SPHStateData::grad_weight(size_t p, const Vector& P) const
@@ -47,9 +48,14 @@ const pba::Vector pba::SPHStateData::grad_weight(size_t p, const Vector& P) cons
 	else if (r >= 2 * h)
 		res = 0.0f;
 
-	return (x - P) * res;
+	Vector test = (x - P) * res;
+	if (!isnan(test.X()) || !isnan(test.Y()) || isnan(test.Z()))
+	{
+		int asd = 123;
+	}
+	return ((x - P)/ r) * res;
 
-	assert(r < 0.0f);
+	//assert(r < 0.0f);
 }
 
 void pba::SPHStateData::compute_density()
