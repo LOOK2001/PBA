@@ -20,19 +20,19 @@ void pba::AABB::split(const int component, AABB& aabb1, AABB& aabb2) const
 	{
 	case 0:// X
 	{
-		float newX = (llc.X() + urc.X()) * 0.5;
+		double newX = (llc.X() + urc.X()) * 0.5;
 		aabb1 = AABB(llc, Vector(newX, urc.Y(), urc.Z()));
 		aabb2 = AABB(Vector(newX, llc.Y(), llc.Z()), urc);
 	}break;
 	case 1:// Y
 	{
-		float newY = (llc.Y() + urc.Y()) * 0.5;
+		double newY = (llc.Y() + urc.Y()) * 0.5;
 		aabb1 = AABB(llc, Vector(urc.X(), newY, urc.Z()));
 		aabb2 = AABB(Vector(llc.X(), newY, llc.Z()), urc);
 	}break;
 	case 2:// Z
 	{
-		float newZ = (llc.Z() + urc.Z()) * 0.5;
+		double newZ = (llc.Z() + urc.Z()) * 0.5;
 		aabb1 = AABB(llc, Vector(urc.X(), urc.Y(), newZ));
 		aabb2 = AABB(Vector(llc.X(), llc.Y(), newZ), urc);
 	}break;
@@ -66,6 +66,11 @@ const double pba::AABB::intersect(const Vector& start, const Vector& dir) const
 	tymin = (bounds[sign[1]].Y() - start.Y()) * invdir.Y();
 	tymax = (bounds[1 - sign[1]].Y() - start.Y()) * invdir.Y();
 
+	if (isinf(tmax))
+		tmax = std::abs(tmax);
+	if (isinf(tymax))
+		tymax = std::abs(tymax);
+
 	if ((tmin > tymax) || (tymin > tmax))
 		return false;
 	if (tymin > tmin)
@@ -75,6 +80,9 @@ const double pba::AABB::intersect(const Vector& start, const Vector& dir) const
 
 	tzmin = (bounds[sign[2]].Z() - start.Z()) * invdir.Z();
 	tzmax = (bounds[1 - sign[2]].Z() - start.Z()) * invdir.Z();
+
+	if (isinf(tzmax))
+		tzmax = std::abs(tzmax);
 
 	if ((tmin > tzmax) || (tzmin > tmax))
 		return false;

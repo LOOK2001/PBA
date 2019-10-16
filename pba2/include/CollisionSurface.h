@@ -47,6 +47,8 @@ namespace pba {
 		void set_coeff_sticky(const double v) { coeff_of_sticky = v; }
 		const double& coeff_sticky() const { return coeff_of_sticky; }
 
+		void set_up_aabb();
+
 		//const AABB& aabb() const { return aa_bb; }
 
 		void decay();
@@ -61,7 +63,7 @@ namespace pba {
 		std::vector<CollisionTriangle> tri_elements;
 		//std::vector<CollisionSphere> sphere_elements;
 
-		//AABB aa_bb;
+		AABB aa_bb;
 	};
 
 	typedef std::shared_ptr<CollisionSurfaceRaw> CollisionSurface;

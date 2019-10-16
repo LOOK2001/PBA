@@ -8,6 +8,7 @@ pba::AdvanceSPHVelocity::AdvanceSPHVelocity(SPHState& pq, Force& f, float vclamp
 void pba::AdvanceSPHVelocity::solve(const double dt)
 {
 	// update accel
+#pragma omp parallel for
 	for (int i = 0; i < PQ->nb(); i++)
 	{
 		PQ->set_accel(i, Vector(0.0, 0.0, 0.0));
@@ -22,6 +23,7 @@ void pba::AdvanceSPHVelocity::solve(const double dt)
 	f->compute(PQ, dt);
 
 	// update velocity
+#pragma omp parallel for
 	for (int i = 0; i < PQ->nb(); i++)
 	{
 		if (PQ->accel(i).magnitude() > acceleration_clamp)
@@ -34,6 +36,8 @@ void pba::AdvanceSPHVelocity::solve(const double dt)
 			PQ->set_vel(i, _v);
 		//PQ->set_vel(i, PQ->vel(i) + PQ->accel(i) * dt);
 	}
+
+	PQ->populate();
 }
 
 pba::GISolver pba::CreateAdvanceVelocity(SPHState& pq, Force& f, float vel_clamp, float accel_clamp)
@@ -48,6 +52,7 @@ pba::AdvanceSPHPositionWithCollisions::AdvanceSPHPositionWithCollisions(SPHState
 void pba::AdvanceSPHPositionWithCollisions::solve(const double dt)
 {
 	// update position
+#pragma omp parallel for
 	for (int i = 0; i < PQ->nb(); i++)
 	{
 		Vector pos = PQ->pos(i) + PQ->vel(i) * dt;

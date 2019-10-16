@@ -19,11 +19,13 @@ void pba::SPHForce::compute(SPHState& s, const double dt)
 
 void pba::SPHForce::compute_pressure(SPHState& s)
 {
+#pragma omp parallel for
 	for (int i = 0; i < s->nb(); i++)
 	{
 		Vector pressureF;
 		float den_a = s->get_float_attr("den", i);
 		float pres_a = pressure_magnitude * (pow((den_a / pressure_base), pressure_power) - 1);
+#pragma omp parallel for
 		for (int j = 0; j < s->nb(); j++)
 		{
 			if (j == i)
@@ -31,6 +33,10 @@ void pba::SPHForce::compute_pressure(SPHState& s)
 
 			float m_b = s->mass(j);
 			float den_b = s->get_float_attr("den", j);
+
+			if (den_b == 0.0f || den_a == 0.0f)
+				continue;
+
 			float pres_b = pressure_magnitude * (pow((den_b / pressure_base), pressure_power) - 1);
 			Vector ureF = (m_b * ((pres_a / (den_a * den_a) + pres_b / (den_b * den_b))) * s->grad_weight(i, s->pos(j)));
 			pressureF -= (m_b * ((pres_a / (den_a * den_a) + pres_b / (den_b * den_b))) * s->grad_weight(i, s->pos(j)));
@@ -43,11 +49,13 @@ void pba::SPHForce::compute_pressure(SPHState& s)
 
 void pba::SPHForce::compute_viscosity(SPHState& s)
 {
+#pragma omp parallel for
 	for (int i = 0; i < s->nb(); i++)
 	{
 		Vector viscosityF = Vector(0.0, 0.0, 0.0);
 		Vector pos_a = s->pos(i);
 		Vector vel_a = s->vel(i);
+#pragma omp parallel for
 		for (int j = 0; j < s->nb(); j++)
 		{
 			if (j == i)
@@ -68,6 +76,9 @@ void pba::SPHForce::compute_viscosity(SPHState& s)
 				double den_a = s->get_float_attr("den", i);
 				double den_b = s->get_float_attr("den", j);
 				double _den = (den_a + den_b) / 2;
+
+				if (_den == 0.0)
+					continue;
 
 				double h = s->get_radius()/2;
 				double _pos = (pos_a - pos_b).magnitude();

@@ -1,6 +1,7 @@
 ﻿#include "CollisionSurface.h"
 
-pba::CollisionSurfaceRaw::CollisionSurfaceRaw()
+pba::CollisionSurfaceRaw::CollisionSurfaceRaw():
+	aa_bb(Vector(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0))
 {
 	coeff_of_restitution = 1.0;
 	coeff_of_sticky = 1.0;
@@ -16,6 +17,12 @@ void pba::CollisionSurfaceRaw::addTriangle(const CollisionTriangle& t)
 
 bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const
 {
+	double _t = aa_bb.intersect((P - V*tmax), V);
+
+	// intersection inside the segment
+	if (!(_t > 0 && _t <= tmax))
+		return false;
+
 	double tc = tmax;
 	t.status = false;
 	bool isFirst = true;
@@ -25,6 +32,8 @@ bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const doubl
 	{
 		if (tri_elements[i]->hit(P, V, tmax, tc))
 		{
+			Vector test = P + (V * tmax);
+
 			// find the largest backwards T (tc)
 			if (isFirst){
 				t.t = tc;
@@ -73,6 +82,26 @@ bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const doubl
 // 	}
 // 
 // 	return t.status;
+}
+
+void pba::CollisionSurfaceRaw::set_up_aabb()
+{
+	Vector llc = tri_elements[0]->vertex(0), urc = tri_elements[0]->vertex(0);
+
+	for (int i = 0; i < tri_elements.size(); i++) {
+		for (int j = 0; j < 3; j++) {
+
+			const Vector& point = tri_elements[i]->vertex(j);
+
+			for (int k = 0; k < 3; k++) {
+				if (point[k] < llc[k])
+					llc[k] = point[k];
+				else if (point[k] > urc[k])
+					urc[k] = point[k];
+			}
+		}
+	}
+	aa_bb = AABB(llc, urc);
 }
 
 pba::CollisionSurface pba::makeCollisionSurface()

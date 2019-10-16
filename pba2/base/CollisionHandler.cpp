@@ -3,14 +3,14 @@
 void pba::CollisionHandler::set_collision_surface(CollisionSurface& c)
 {
 	surf = c;
-	usetree = false;
+	usetree = true;
 
 	if (!c->triangle_size())
 		return;
 
 	Vector llc = c->get_triangle(0)->vertex(0), urc = c->get_triangle(0)->vertex(0);
 
-	for (int i = 1; i < c->triangle_size(); i++) {
+	for (int i = 0; i < c->triangle_size(); i++) {
 		for (int j = 0; j < 3; j++)	{
 
 			const Vector& point = c->get_triangle(i)->vertex(j);
@@ -26,6 +26,8 @@ void pba::CollisionHandler::set_collision_surface(CollisionSurface& c)
 
 	tree = new TraceTree(llc, urc, 0, 5, 12);
 	tree->addObject(surf);
+
+	surf->set_up_aabb();
 }
 
 void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalState& S)

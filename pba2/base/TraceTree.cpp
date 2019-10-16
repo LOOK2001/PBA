@@ -8,13 +8,14 @@ pba::TraceTree::TraceTree(const Vector& llc, const Vector& urc, const int lvl, c
 	min_objects = minobj;
 }
 
-
 pba::TraceTree::~TraceTree()
 {
 	if (node1)
 		delete node1;
 	if (node2)
 		delete node2;
+
+	object_list.clear();
 }
 
 void pba::TraceTree::Divide()
@@ -89,7 +90,7 @@ bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, Co
 	t.status = false;
 
 	// intersection inside the segment
-	if (_t >= 0 && _t <= tmax) {
+	if (_t > 0 && _t <= tmax) {
 		// until to get the deepest box,
 		// check intersection with triangles
 		if (level > max_levels || object_list.size() < min_objects) 
@@ -124,8 +125,10 @@ bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, Co
 		else // check intersection with child bounding box 
 		{	
 			Divide();
-			if (!node1->hit(P, V, tmax, t) && !node2->hit(P, V, tmax, t))
-				return false;
+			if (node1->hit(P, V, tmax, t) || node2->hit(P, V, tmax, t))
+				return true;
+// 			else
+// 				hit(P, V, tmax, t);
 // 			node1->Divide();
 // 			node2->Divide();
 		}

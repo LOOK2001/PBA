@@ -36,14 +36,16 @@ namespace pba {
 			emit(false),
 			box(pba::makeCollisionSurface()),
 			emitter(ParticleEmitter(Vector(0.0, 0.0, 0.0), Vector(-1.0, 0, 0), 0.05, 10.0))
+			//emitter(ParticleEmitter(Vector(50.5, -10.0, 1.5), Vector(-1.0, 0, 0), 2.5, 10.0))
 		{
-			AABB bounds(Vector(-3, -3, -3), Vector(3, 3, 3));
-			double h = 0.5/*3.0 / 200.0*/;
+			AABB bounds(Vector(-90, -40, -60), Vector(100, 50, 56));
+			double h = 90 / 200.0;//*3.0 / 200.0*/
+			//double h = 0.5;
 			state = CreateSPH(bounds, h, name + "DynamicalData");
 			//state->add(280000/10);
 
 			force = CreateAccumulatingForce();
-			gravityforce = CreateAccumulatingGravityForce(pba::Vector(0, -10.0, 0));
+			gravityforce = CreateAccumulatingGravityForce(pba::Vector(0, -50.0, 0));
 			sphforce = CreateSPHForce();
 
 			std::shared_ptr<AccumulatingForce> f = dynamic_pointer_cast<AccumulatingForce>(force);
@@ -95,7 +97,7 @@ namespace pba {
 		{
 			if (emit)
 			{
-				int nbincrease = 50;
+				int nbincrease = 30;
 				state->add(nbincrease);
 				std::cout << "Emit: Total Points " << state->nb() << std::endl;
 //#pragma omp parallel for

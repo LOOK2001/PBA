@@ -10,6 +10,20 @@ pba::SPHStateData::SPHStateData(const AABB& aabb, const double h, const std::str
 	create_attr("den", 0.0f);
 }
 
+pba::SPHStateData& pba::SPHStateData::operator=(const SPHStateData& d)
+{
+	radius = d.get_radius();
+	t = d.t;
+	nb_items = d.nb_items;
+	name = d.name;
+	int_attributes = d.int_attributes;
+	float_attributes = d.float_attributes;
+	vector_attributes = d.vector_attributes;
+	color_attributes = d.color_attributes;
+	re_find_main_attrs();
+	return *this;
+}
+
 void pba::SPHStateData::set_radius(const float& v)
 {
 	radius = v;
@@ -61,9 +75,11 @@ const pba::Vector pba::SPHStateData::grad_weight(size_t p, const Vector& P) cons
 void pba::SPHStateData::compute_density()
 {
 	// all particles
+#pragma omp parallel for
 	for (int i = 0; i < nb(); i++)
 	{
 		float density = 0.0f;
+#pragma omp parallel for
 		for (int j = 0; j < nb(); j++)
 		{
 			if (j == i)
@@ -75,6 +91,16 @@ void pba::SPHStateData::compute_density()
 			density += (m * w);
 		}
 		set_attr("den", i, density);
+	}
+}
+
+void pba::SPHStateData::populate()
+{
+ 	DynamicalStateData* pq = new DynamicalStateData;
+ 	pq = this;
+	if (pq->nb() > 0)
+	{
+		OccupancyVolume::populate(*pq);
 	}
 }
 

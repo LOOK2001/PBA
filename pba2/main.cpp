@@ -26,13 +26,14 @@ int main(int argc, char* argv[]) {
 	}
 
 	ObjParser* objReader = new ObjParser();
-	objReader->ParseFile("C:/Xicheng/MyLife/College/Code/PBA/pba2/pba2/common/utah_teapot.obj");
-	CollisionSurface surf = makeCollisionSurface();
-	objReader->Fill(surf);
-	surf->toggle_wireframe();
+	objReader->ParseFile("C:/Xicheng/MyLife/College/Code/PBA/pba2/pba2/common/utah_teapot2.obj");
+	CollisionSurface teapot = makeCollisionSurface();
+	objReader->Fill(teapot);
+	teapot->toggle_wireframe();
 
+	//BouncingBallsThing* BouncingBalls = new BouncingBallsThing;
 	SphInATeapotThing* BouncingBalls = new SphInATeapotThing;
-	BouncingBalls->AddCollisionSurface(surf);
+	BouncingBalls->AddCollisionSurface(cube);
 	PbaThing balls = PbaThing(BouncingBalls);
 
 	viewer->AddThing(balls);

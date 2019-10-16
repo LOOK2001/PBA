@@ -42,6 +42,7 @@ namespace pba
 		std::vector<std::vector<size_t>> contents;
 		std::vector<Vector> center_of_mass;
 		std::vector<double> total_mass;
+		std::vector<Vector> cellID;
 
 		void compute_size();
 	};

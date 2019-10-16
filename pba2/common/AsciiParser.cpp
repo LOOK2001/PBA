@@ -63,11 +63,23 @@ const bool pba::AsciiParser::ParseFile(const string& path, meshData& mesh)
 		if (algorithm::firstToken(curline) == "f")
 		{
 			std::vector<std::string> snor;
+			std::vector<std::string> snor2;
 			algorithm::split(algorithm::tail(curline), snor, " ");
 
 			for (int j = 0; j < 3; j++)
 			{
-				mesh.Indices.push_back(std::stoi(snor[j])-1);
+				algorithm::split(snor[j], snor2, "//");
+				mesh.Indices.push_back((std::stoi(snor2[0])-1));
+			}
+
+			unsigned int test0, test1, test2;
+			test0 = mesh.Indices[mesh.Indices.size() - 3];
+			test1 = mesh.Indices[mesh.Indices.size() - 2];
+			test2 = mesh.Indices[mesh.Indices.size() - 1];
+
+			if ((test0 == test1) || (test0 == test2) || (test1 == test2))
+			{
+				int success = 123;
 			}
 		}
 	}
