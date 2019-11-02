@@ -3,7 +3,7 @@
 
 #include "CollisionSurface.h"
 #include "DynamicalState.h"
-//#include "RigidBodyState.h"
+#include "RigidBodyState.h"
 //#include "SoftBodyState.h"
 #include "TraceTree.h"
 #include <iostream>
@@ -38,6 +38,21 @@ namespace pba
 		ElasticCollisionHandler() {}
 		~ElasticCollisionHandler() {}
 		void handle_collisions(const double dt, DynamicalState& S);
+	};
+
+	class ElasticRBDCollisionHandler :public CollisionHandler
+	{
+	public:
+		ElasticRBDCollisionHandler() :
+			coeff_of_restitution(1.0)
+		{}
+		~ElasticRBDCollisionHandler() {}
+
+		void handle_collisions(const double dt, RigidBodyState& s);
+		void set_CR(const float v) { coeff_of_restitution = v; }
+
+	private:
+		float coeff_of_restitution;
 	};
 }
 

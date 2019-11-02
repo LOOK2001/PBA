@@ -35,17 +35,19 @@ namespace pba {
 			PbaThingyDingy(nam),
 			emit(false),
 			box(pba::makeCollisionSurface()),
-			emitter(ParticleEmitter(Vector(0.0, 0.0, 0.0), Vector(-1.0, 0, 0), 0.05, 10.0))
+			emitter(ParticleEmitter(Vector(1.5, -2.0, 1.5), Vector(-1.0, 0, 0), 0.25, 1.0))
 			//emitter(ParticleEmitter(Vector(50.5, -10.0, 1.5), Vector(-1.0, 0, 0), 2.5, 10.0))
 		{
-			AABB bounds(Vector(-90, -40, -60), Vector(100, 50, 56));
-			double h = 90 / 200.0;//*3.0 / 200.0*/
-			//double h = 0.5;
+			//AABB bounds(Vector(-90, -40, -60), Vector(100, 50, 56));
+			//double h = 90 / 200.0;//*3.0 / 200.0*/
+			AABB bounds(Vector(-3, -3, -3), Vector(3, 3, 3));
+			double h = 0.5;
+			//double h = 3.0 / 200.0;
 			state = CreateSPH(bounds, h, name + "DynamicalData");
 			//state->add(280000/10);
 
 			force = CreateAccumulatingForce();
-			gravityforce = CreateAccumulatingGravityForce(pba::Vector(0, -50.0, 0));
+			gravityforce = CreateAccumulatingGravityForce(pba::Vector(0, -100.0, 0));
 			sphforce = CreateSPHForce();
 
 			std::shared_ptr<AccumulatingForce> f = dynamic_pointer_cast<AccumulatingForce>(force);
@@ -58,13 +60,6 @@ namespace pba {
 			//solver = CreateGISolverSixthOrder(solver);
 			Reset();
 			std::cout << name << " constructed\n";
-
-			double test1 = (-1.0 / 0.0) * 0.0;
-			double test2 = test1 * 0.0;
-			if (isnan(test1))
-			{
-				int test3 = 123;
-			}
 		}
 		~SphInATeapotThing() {}
 
@@ -91,21 +86,79 @@ namespace pba {
 			if (key == 'v') { box->toggle_visible(); }
 			if (key == 'w') { box->toggle_wireframe(); }
 			if (key == 'e') { emit = !emit; }
+			if (key == 'g')
+			{
+				std::shared_ptr<AccumulatingGravityForce> f = dynamic_pointer_cast<AccumulatingGravityForce>(gravityforce);
+				f->set_strength(f->get_strength() / 1.1);
+				std::cout << "Gravity strength: " << f->get_strength() << std::endl;
+			}
+			if (key == 'G')
+			{
+				std::shared_ptr<AccumulatingGravityForce> f = dynamic_pointer_cast<AccumulatingGravityForce>(gravityforce);
+				f->set_strength(f->get_strength() * 1.1);
+				std::cout << "Gravity strength: " << f->get_strength() << std::endl;
+			}
+			if (key == 'p')
+			{
+				std::shared_ptr<SPHForce> f = dynamic_pointer_cast<SPHForce>(sphforce);
+				f->set_pressure_magnitude(f->get_pressure_magnitude() / 1.1);
+				std::cout << "Pressure magnitude: " << f->get_pressure_magnitude() << std::endl;
+			}
+			if (key == 'P')
+			{
+				std::shared_ptr<SPHForce> f = dynamic_pointer_cast<SPHForce>(sphforce);
+				f->set_pressure_magnitude(f->get_pressure_magnitude() * 1.1);
+				std::cout << "Pressure magnitude: " << f->get_pressure_magnitude() << std::endl;
+			}
+			if (key == 'y')
+			{
+				std::shared_ptr<SPHForce> f = dynamic_pointer_cast<SPHForce>(sphforce);
+				f->set_pressure_base(f->get_pressure_base() / 1.1);
+				std::cout << "Pressure base: " << f->get_pressure_base() << std::endl;
+			}
+			if (key == 'Y')
+			{
+				std::shared_ptr<SPHForce> f = dynamic_pointer_cast<SPHForce>(sphforce);
+				f->set_pressure_base(f->get_pressure_base() * 1.1);
+				std::cout << "Pressure base: " << f->get_pressure_base() << std::endl;
+			}
+			if (key == 'a')
+			{
+				std::shared_ptr<SPHForce> f = dynamic_pointer_cast<SPHForce>(sphforce);
+				f->set_alpha_sph(f->get_alpha_sph() / 1.1);
+				std::cout << "Viscosity alpha: " << f->get_alpha_sph() << std::endl;
+			}
+			if (key == 'A')
+			{
+				std::shared_ptr<SPHForce> f = dynamic_pointer_cast<SPHForce>(sphforce);
+				f->set_alpha_sph(f->get_alpha_sph() * 1.1);
+				std::cout << "Viscosity alpha: " << f->get_alpha_sph() << std::endl;
+			}
+			if (key == 'b')
+			{
+				std::shared_ptr<SPHForce> f = dynamic_pointer_cast<SPHForce>(sphforce);
+				f->set_beta_sph(f->get_beta_sph() / 1.1);
+				std::cout << "Viscosity beta: " << f->get_beta_sph() << std::endl;
+			}
+			if (key == 'B')
+			{
+				std::shared_ptr<SPHForce> f = dynamic_pointer_cast<SPHForce>(sphforce);
+				f->set_beta_sph(f->get_beta_sph() * 1.1);
+				std::cout << "Viscosity beta: " << f->get_beta_sph() << std::endl;
+			}
 		}
 
 		void solve()
 		{
 			if (emit)
 			{
-				int nbincrease = 30;
+				int nbincrease = 50;
 				state->add(nbincrease);
 				std::cout << "Emit: Total Points " << state->nb() << std::endl;
-//#pragma omp parallel for
 				for (size_t i = state->nb() - nbincrease; i < state->nb(); i++)
 				{
 					Vector P, V;
 					Color C;
-//#pragma omp critical
 					{
 						emitter.emit(P, V, C);
 					}

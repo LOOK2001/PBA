@@ -3,6 +3,7 @@
 #include "CollisionSurface.h"
 //#include "RigidBodyState.h"
 
+
 namespace pba {
 	class TraceTree {
 	public:
@@ -14,7 +15,7 @@ namespace pba {
 		void addObject(CollisionSurface& s);
 		void addObject(CollisionTriangle& s);
 
-		bool hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t);
+		bool hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const;
 
 		//bool hit()
 

@@ -17,9 +17,9 @@ namespace pba
 
 		void populate(const DynamicalStateData& pq);
 
-		size_t nbx() const;
-		size_t nby() const;
-		size_t nbz() const;
+		size_t nbx() const { return nx; };
+		size_t nby() const { return ny; };;
+		size_t nbz() const { return nz; };;
 		size_t cell_nb(size_t i, size_t j, size_t k) const;
 		const std::vector<size_t>& cell_contents(size_t i, size_t j, size_t k) const;
 		Vector cell_center_of_mass(size_t i, size_t j, size_t k) const;
@@ -34,6 +34,9 @@ namespace pba
 
 		const double& get_cellsize() const { return cellsize; }
 		void set_cellsize(const double& v);
+
+		const size_t contents_nb() const { return contents.size(); }
+		const void get_id_from_contents(size_t i, std::vector<size_t>& ids) const { ids = contents[i]; }
 
 	private:
 		AABB bounds;

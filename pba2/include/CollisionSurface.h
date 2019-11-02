@@ -49,7 +49,7 @@ namespace pba {
 
 		void set_up_aabb();
 
-		//const AABB& aabb() const { return aa_bb; }
+		const AABB& aabb() const { return aa_bb; }
 
 		void decay();
 

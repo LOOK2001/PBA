@@ -74,33 +74,88 @@ const pba::Vector pba::SPHStateData::grad_weight(size_t p, const Vector& P) cons
 
 void pba::SPHStateData::compute_density()
 {
-	// all particles
-#pragma omp parallel for
-	for (int i = 0; i < nb(); i++)
+	// using OccupancyVolume to compute the density
+	if (contents_nb() <= 0)
 	{
-		float density = 0.0f;
-#pragma omp parallel for
-		for (int j = 0; j < nb(); j++)
-		{
-			if (j == i)
-				continue;
-
-			float m = mass(j);
-			Vector x = pos(j);
-			float w = weight(i, x);
-			density += (m * w);
-		}
-		set_attr("den", i, density);
+		return;
 	}
+
+	std::vector<size_t> neighbors;
+	std::vector<size_t> id_in_cell;
+
+	for (size_t iii = 0; iii < contents_nb(); iii++)
+	{
+		get_id_from_contents(iii, id_in_cell);
+		neighbor_cells(id_in_cell[0], id_in_cell[1], id_in_cell[2], neighbors);
+
+		for (size_t jjj = 3; jjj < id_in_cell.size(); jjj++)
+		{
+			size_t id = id_in_cell[jjj];
+
+			// compute A's density with each B 
+			float density = 0.0f;
+
+			for (int ii = 3; ii < id_in_cell.size(); ii++)
+			{
+				if (ii == id)
+					continue;
+
+				// compute density
+				size_t j = id_in_cell[ii];
+				float m = mass(j);
+				Vector x = pos(j);
+				float w = weight(id, x);
+				density += (m * w);
+			}
+
+			// each neighbors
+			for (int jj = 0; jj < neighbors.size(); jj++)
+			{
+				// get particles from each neighbors
+				get_id_from_contents(jj, id_in_cell);
+
+				// compute density A's density with each particles
+				for (int kk = 3; kk < id_in_cell.size(); kk++)
+				{
+					// compute density
+					size_t j = id_in_cell[kk];
+					float m = mass(j);
+					Vector x = pos(j);
+					float w = weight(id, x);
+					density += (m * w);
+				}
+			}
+			set_attr("den", id, density);
+		}
+	}
+
+// 	// all particles
+// #pragma omp parallel for
+// 	for (int i = 0; i < nb(); i++)
+// 	{
+// 		float density = 0.0f;
+// #pragma omp parallel for
+// 		for (int j = 0; j < nb(); j++)
+// 		{
+// 			if (j == i)
+// 				continue;
+// 
+// 			float m = mass(j);
+// 			Vector x = pos(j);
+// 			float w = weight(i, x);
+// 			density += (m * w);
+// 		}
+// 		set_attr("den", i, density);
+// 	}
 }
 
 void pba::SPHStateData::populate()
 {
- 	DynamicalStateData* pq = new DynamicalStateData;
- 	pq = this;
-	if (pq->nb() > 0)
+ 	DynamicalStateData pq = DynamicalStateData();
+ 	pq = *this;
+	if (pq.nb() > 0)
 	{
-		OccupancyVolume::populate(*pq);
+		OccupancyVolume::populate(pq);
 	}
 }
 

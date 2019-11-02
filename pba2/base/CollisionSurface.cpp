@@ -17,11 +17,11 @@ void pba::CollisionSurfaceRaw::addTriangle(const CollisionTriangle& t)
 
 bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const
 {
-	double _t = aa_bb.intersect((P - V*tmax), V);
-
-	// intersection inside the segment
-	if (!(_t > 0 && _t <= tmax))
-		return false;
+// 	double _t = aa_bb.intersect((P - V*tmax), V);
+// 
+// 	// intersection inside the segment
+// 	if (!(_t > 0 && _t <= tmax))
+// 		return false;
 
 	double tc = tmax;
 	t.status = false;

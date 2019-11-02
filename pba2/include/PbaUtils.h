@@ -4,6 +4,9 @@
 #include "CollisionSurface.h"
 #include "PbaThing.h"
 
+#include <AABB.h>
+extern std::vector<pba::AABB> testAABB;
+
 using namespace std;
 
 namespace pba {

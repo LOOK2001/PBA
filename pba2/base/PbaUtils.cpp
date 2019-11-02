@@ -11,6 +11,8 @@
 #include <GL/glut.h> // GLUT support library.
 #endif
 
+std::vector<pba::AABB> testAABB;
+
 void pba::AddCollisionSurface(CollisionSurface& s, PbaThing& p)
 {
 	return;
@@ -23,6 +25,8 @@ void pba::Display(CollisionSurface& s)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	
 	glBegin(GL_TRIANGLES);
@@ -46,6 +50,35 @@ void pba::Display(CollisionSurface& s)
 		glVertex3f(v.X(), v.Y(), v.Z());
 		//glNormal3f(v.X(), v.Y(), v.Z());
 	}
+
+	if (!testAABB.empty())
+	{
+		for (auto box : testAABB)
+		{
+			glBegin(GL_TRIANGLES);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			pba::Vector	v1 = box.LLC();
+			pba::Vector	v2 = box.URC();
+			glVertex3f(v1.X(), v1.Y(), v1.Z());
+			glVertex3f(v2.X(), v1.Y(), v1.Z());
+			glVertex3f(v2.X(), v2.Y(), v1.Z());
+
+			glVertex3f(v1.X(), v1.Y(), v1.Z());
+			glVertex3f(v1.X(), v2.Y(), v1.Z());
+			glVertex3f(v2.X(), v2.Y(), v1.Z());
+
+			glVertex3f(v1.X(), v1.Y(), v1.Z());
+			glVertex3f(v1.X(), v1.Y(), v2.Z());
+			glVertex3f(v2.X(), v1.Y(), v1.Z());
+
+			glVertex3f(v1.X(), v1.Y(), v2.Z());
+			glVertex3f(v2.X(), v1.Y(), v2.Z());
+			glVertex3f(v2.X(), v1.Y(), v1.Z());
+
+			glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
+		}
+	}
+
 	glEnd();
 	return;
 }
@@ -128,7 +161,7 @@ pba::CollisionSurface pba::GenerateCollisionCube(double size)
 		std::vector<int>& face = faces[i];
 
 		CollisionTriangle tri1 = makeCollisionTriangle(Vertex(face[0]), Vertex(face[1]), Vertex(face[2]));
-		tri1->set_color(face_colors[i]);
+		tri1->set_color(face_colors[i % 6]);
 		surf->addTriangle(tri1);
 
 		CollisionTriangle tri2 = makeCollisionTriangle(Vertex(face[2]), Vertex(face[3]), Vertex(face[0]));

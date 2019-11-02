@@ -95,6 +95,18 @@
     <ClCompile Include="base\SPHForce.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="base\RigidBodyState.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\RBDSolver.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Torque.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\TorqueLibrary.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Color.h">
@@ -188,6 +200,18 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\SPHForce.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RigidBodyState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RBDSolver.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Torque.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TorqueLibrary.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

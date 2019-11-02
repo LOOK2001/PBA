@@ -24,10 +24,11 @@ void pba::CollisionHandler::set_collision_surface(CollisionSurface& c)
 		}
 	}
 
-	tree = new TraceTree(llc, urc, 0, 5, 12);
+	tree = new TraceTree(llc, urc, 0, 10, 4);
 	tree->addObject(surf);
+	tree->Divide();
 
-	surf->set_up_aabb();
+	//surf->set_up_aabb();
 }
 
 void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalState& S)
@@ -39,7 +40,6 @@ void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalS
 		for (int i = 0; i < S->nb(); i++)
 		{
 			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
-
 			while (surf->hit(S->pos(i), S->vel(i), CD.t, CD))
 			{
 				Vector v = S->vel(i);
@@ -60,13 +60,13 @@ void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalS
 	}
 	else
 	{
+#pragma omp parallel for
 		for (int i = 0; i < S->nb(); i++)
 		{
 			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
-
 			// check intersection with top bounding box
 			while (tree->hit(S->pos(i), S->vel(i), CD.t, CD))
-			{
+			{		
 				Vector v = S->vel(i);
 				Vector norm = CD.tri->N();
 				vn = norm * S->vel(i);

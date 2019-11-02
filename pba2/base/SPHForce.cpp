@@ -24,6 +24,10 @@ void pba::SPHForce::compute_pressure(SPHState& s)
 	{
 		Vector pressureF;
 		float den_a = s->get_float_attr("den", i);
+
+		if (den_a == 0.0f)
+			continue;
+
 		float pres_a = pressure_magnitude * (pow((den_a / pressure_base), pressure_power) - 1);
 #pragma omp parallel for
 		for (int j = 0; j < s->nb(); j++)
@@ -34,7 +38,7 @@ void pba::SPHForce::compute_pressure(SPHState& s)
 			float m_b = s->mass(j);
 			float den_b = s->get_float_attr("den", j);
 
-			if (den_b == 0.0f || den_a == 0.0f)
+			if (den_b == 0.0f)
 				continue;
 
 			float pres_b = pressure_magnitude * (pow((den_b / pressure_base), pressure_power) - 1);

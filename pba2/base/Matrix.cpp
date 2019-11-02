@@ -329,6 +329,14 @@ const double Matrix::cofactor(int i, int j) const
   return pow( -1.0, (i+j) ) * ( small[0][0] * small[1][1] - small[0][1] * small[1][0] ) ; 
 }
 
+const void pba::Matrix::unit()
+{
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			m[i][j] = (i == j);
+		}
+	}
+}
 
 
 

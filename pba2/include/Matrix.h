@@ -155,6 +155,7 @@ class Matrix
           void setExpRange( const int n ) { range = n; }
      const int getExpRange( const int n ) const { return range; }
   const Matrix sinch() const; // this is inv(M)*( 1 - exp(-M))
+  const void unit();
 
   const double Get( const int a, const int b ) const { return m[a][b]; }
   void Set( const int a, const int b, const double value ) { m[a][b] = value; }
