@@ -26,9 +26,12 @@ int main(int argc, char* argv[]) {
 		cube->get_triangle(5)->set_invisable();
 	}
 
+	ObjParser* objReader = new ObjParser();
+	objReader->ParseFile("C:/Xicheng/MyLife/College/Code/PBA/pba2/pba2/common/bunny.obj");
+
 	BouncingRBDThing* BouncingBalls = new BouncingRBDThing;
-	//BouncingBallsThing* BouncingBalls = new BouncingBallsThing;
 	BouncingBalls->AddCollisionSurface(cube);
+	objReader->Fill(BouncingBalls->getState());
 	PbaThing balls = PbaThing(BouncingBalls);
 
 	viewer->AddThing(balls);

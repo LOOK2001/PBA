@@ -185,6 +185,11 @@ bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, Co
 	return t.status;
 }
 
+bool pba::TraceTree::hit(const RigidBodyState& s, const size_t i, const double tmax, CollisionData& t) const
+{
+	return false;
+}
+
 // bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const
 // {
 // 	double _t2 = aabb.intersect((P - (V * tmax)), V);

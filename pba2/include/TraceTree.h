@@ -17,6 +17,8 @@ namespace pba {
 
 		bool hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const;
 
+		bool hit(const RigidBodyState& s, const size_t i, const double tmax, CollisionData& t) const;
+
 		//bool hit()
 
 		const size_t nbObject() const { return object_list.size(); }

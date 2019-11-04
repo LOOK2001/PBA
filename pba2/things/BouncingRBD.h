@@ -163,17 +163,17 @@ namespace pba {
 		void Reset()
 		{
 			// Distribute particles with random positions
-			Vector zero(0, 0, 0);
-			for (size_t i = 0; i < state->nb(); i++)
-			{
-				Vector P(x_aspect * (drand48() - 0.5), y_aspect * (drand48() - 0.5), drand48() - 0.5);
-				P *= 2.5;
-				Color C(drand48(), drand48(), drand48(), 1.0);
-				state->set_pos(i, P);
-				state->set_ci(i, C);
-				state->set_vel(i, zero);
-			}
-			state->compute_RBD_data();
+// 			Vector zero(0, 0, 0);
+// 			for (size_t i = 0; i < state->nb(); i++)
+// 			{
+// 				Vector P(x_aspect * (drand48() - 0.5), y_aspect * (drand48() - 0.5), drand48() - 0.5);
+// 				P *= 2.5;
+// 				Color C(drand48(), drand48(), drand48(), 1.0);
+// 				state->set_pos(i, P);
+// 				state->set_ci(i, C);
+// 				state->set_vel(i, zero);
+// 			}
+// 			state->compute_RBD_data();
 			state->center_of_mass = Vector(drand48() - 0.5, drand48() - 0.5, drand48() - 0.5);
 			state->linear_velocity = Vector(drand48() - 0.5, drand48() - 0.5, drand48() - 0.5);
 			state->angular_velocity = Vector(drand48() - 0.5, drand48() - 0.5, drand48() - 0.5);
@@ -198,6 +198,11 @@ namespace pba {
 			std::cout << "Add CollisionSurface\n";
 			box = s;
 			collisions.set_collision_surface(box);
+		}
+
+		pba::DynamicalState getState()
+		{
+			return state;
 		}
 
 	private:

@@ -1,4 +1,5 @@
 #include "ObjParser.h"
+#include "PbaUtils.h"
 
 const bool pba::ObjParser::ParseFile(const string& filename)
 {
@@ -35,6 +36,30 @@ const bool pba::ObjParser::Fill(CollisionSurface& surf)
 		i += 3;
 		tri->set_color(face_colors[(++j) % 6]);
 		surf->addTriangle(tri);
+	}
+
+	return true;
+}
+
+const bool pba::ObjParser::Fill(DynamicalState& g)
+{
+	// vertices
+	const std::vector<Vector>& verts = mesh.Positions;
+	Vector zero(0, 0, 0);
+
+	if (!g)
+	{
+		return false;
+	}
+
+	size_t size = verts.size();
+	g->add(verts.size() - g->nb());
+	for (size_t i = 0; i < verts.size(); i++)
+	{
+		Color C(drand48(), drand48(), drand48(), 1.0);
+		g->set_pos(i, verts[i]);
+		g->set_ci(i, C);
+		g->set_vel(i, zero);
 	}
 
 	return true;
