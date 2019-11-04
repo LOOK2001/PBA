@@ -20,6 +20,7 @@ namespace pba
 		const bool ParseFile(const string& filename);
 		const bool Fill(CollisionSurface& g);
 		const bool Fill(DynamicalState& g);
+		const bool Fill(RigidBodyState& g);
 		//const bool Fill(SoftBodyState& g);
 		const bool List();
 

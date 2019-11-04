@@ -9,6 +9,10 @@ pba::RigidBodyStateData::RigidBodyStateData(const std::string& nam /*= "RBDDataN
 
 pba::RigidBodyStateData::RigidBodyStateData(const RigidBodyStateData& d)
 {
+	create_attr("r", Vector());
+	create_attr("p", Vector());
+	create_attr("tau", Vector());
+
 	center_of_mass = d.center_of_mass;
 	angular_rotation = d.angular_rotation;
 	linear_velocity = d.linear_velocity;
@@ -26,6 +30,10 @@ pba::RigidBodyStateData& pba::RigidBodyStateData::operator=(const RigidBodyState
 {
 	if (this != &d)
 	{
+		create_attr("r", Vector());
+		create_attr("p", Vector());
+		create_attr("tau", Vector());
+
 		center_of_mass = d.center_of_mass;
 		angular_rotation = d.angular_rotation;
 		linear_velocity = d.linear_velocity;

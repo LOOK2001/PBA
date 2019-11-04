@@ -41,26 +41,52 @@ const bool pba::ObjParser::Fill(CollisionSurface& surf)
 	return true;
 }
 
+const bool pba::ObjParser::Fill(RigidBodyState& g)
+{
+	DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, RigidBodyStateData>(g);
+	return Fill(ss);
+}
+
 const bool pba::ObjParser::Fill(DynamicalState& g)
 {
+	// vertices filter
+	int verFilter = 1;
+
 	// vertices
 	const std::vector<Vector>& verts = mesh.Positions;
 	Vector zero(0, 0, 0);
 
 	if (!g)
-	{
 		return false;
-	}
 
-	size_t size = verts.size();
-	g->add(verts.size() - g->nb());
+	size_t size = 0;
 	for (size_t i = 0; i < verts.size(); i++)
 	{
+		if (!(i % verFilter == 0))
+			continue;
+		size++;
+	}
+
+	g->add(size);
+	size_t i;
+	Vector highest = verts[0];
+	size_t index = 0;
+	for (size_t i = 0; i < size; i++)
+	{
 		Color C(drand48(), drand48(), drand48(), 1.0);
-		g->set_pos(i, verts[i]);
+		g->set_pos(i, verts[i* verFilter]);
 		g->set_ci(i, C);
 		g->set_vel(i, zero);
+		g->set_mass(i, 1);
+
+		if (verts[i * verFilter].Y() > highest.Y())
+		{
+			highest = verts[i * verFilter];
+			index = i;
+		}
 	}
+
+	g->set_mass(index, 1);
 
 	return true;
 }

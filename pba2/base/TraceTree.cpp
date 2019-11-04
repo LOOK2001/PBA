@@ -187,7 +187,51 @@ bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, Co
 
 bool pba::TraceTree::hit(const RigidBodyState& s, const size_t i, const double tmax, CollisionData& t) const
 {
-	return false;
+	t.status = false;
+
+	Matrix u = rotation(s->angular_velocity, s->angular_velocity.magnitude() * tmax) * s->angular_rotation;
+	Vector x0 = s->center_of_mass - s->linear_velocity * tmax + u * s->get_vector_attr("p", i);
+	Vector x1 = s->pos(i);
+
+	if (!aabb.isInside(x0))
+		return false;
+
+	if (node1) {
+		if (node1->hit(s, i, tmax, t))
+			return true;
+	}
+	if (node2) {
+		if (node2->hit(s, i, tmax, t))
+			return true;
+	}
+
+	// until to get the deepest box,
+	// check intersection with triangles
+	double tc = tmax;
+	bool isFirst = true;
+
+	// find all triangles that intersect
+	for (int i = 0; i < object_list.size(); i++)
+	{
+		if (object_list[i]->hit(s, i, tmax, tc))
+		{
+			// find the largest backwards T (tc)
+			if (isFirst) {
+				t.t = tc;
+				t.tri = object_list[i];
+				t.hit_index = i;
+				t.status = true;
+				isFirst = false;
+			}
+			else if (tc > t.t) {
+				t.t = tc;
+				t.tri = object_list[i];
+				t.hit_index = i;
+				t.status = true;
+			}
+		}
+	}
+	return t.status;
 }
 
 // bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const

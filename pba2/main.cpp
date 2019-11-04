@@ -31,7 +31,9 @@ int main(int argc, char* argv[]) {
 
 	BouncingRBDThing* BouncingBalls = new BouncingRBDThing;
 	BouncingBalls->AddCollisionSurface(cube);
-	objReader->Fill(BouncingBalls->getState());
+
+	objReader->Fill(BouncingBalls->get_State());
+	BouncingBalls->Reset();
 	PbaThing balls = PbaThing(BouncingBalls);
 
 	viewer->AddThing(balls);

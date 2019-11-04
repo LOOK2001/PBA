@@ -4,7 +4,7 @@
 void pba::CollisionHandler::set_collision_surface(CollisionSurface& c)
 {
 	surf = c;
-	usetree = true;
+	usetree = false;
 
 	if (!c->triangle_size())
 		return;
@@ -148,6 +148,7 @@ void pba::ElasticRBDCollisionHandler::handle_collisions(const double dt, RigidBo
 			S->angular_rotation = r;
 
 			// 6. Update position and velocity
+#pragma omp parallel for
 			for (int i = 0; i < S->nb(); i++)
 			{
 				Vector pos = S->center_of_mass + S->angular_rotation * S->get_vector_attr("p", i);
@@ -161,30 +162,27 @@ void pba::ElasticRBDCollisionHandler::handle_collisions(const double dt, RigidBo
 				S->set_vel(i, vel);
 			}
 
-			//handle_collisions(tmax, S);
+			handle_collisions(tmax, S);
 		}
 	}
 	else
 	{
 		for (int i = 0; i < S->nb(); i++)
 		{
-			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
 			// check intersection with top bounding box
-			while (tree->hit(S->pos(i), S->vel(i), CD.t, CD))
+			pba::CollisionData CDLarg{ -dt, nullptr, false, false, false, 0 };
+			for (int i = 0; i < S->nb(); i++)
 			{
-				Vector v = S->vel(i);
-				Vector norm = CD.tri->N();
-				vn = norm * S->vel(i);
-				vp = S->vel(i) - norm * vn;
-				vr = (surf->coeff_sticky() * vp) - (surf->coeff_restitution() * norm * vn);
-
-				// set new point
-				Vector xc = S->pos(i) - (S->vel(i) * CD.t);
-				Vector x = xc + vr * CD.t;
-				S->set_pos(i, x);
-
-				// set reflective velocity
-				S->set_vel(i, vr);
+				pba::CollisionData CD{ dt, nullptr, false, false, false, i };// = new pba::CollisionData;
+				if (tree->hit(S, i, CD.t, CD))
+				{
+					isHit = true;
+					// find the largest backwards T (tc) for all particles and triangles
+					if (CD.t > CDLarg.t)
+					{
+						CDLarg = CD;
+					}
+				}
 			}
 		}
 	}

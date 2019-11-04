@@ -46,7 +46,7 @@ namespace pba {
 			y_aspect(1.0)
 		{
 			state = CreateRigidBody(name + "RigidBodyData");
-			state->add(10);
+			//state->add(10);
 			force = CreateSimpleGravityForce(pba::Vector(0, -1.0, 0));
 			GISolver solvera = CreateAdvanceRotation(state, collisions);
 			GISolver solverb = CreateAdvanceAngularVelocity(state, force);
@@ -173,7 +173,7 @@ namespace pba {
 // 				state->set_ci(i, C);
 // 				state->set_vel(i, zero);
 // 			}
-// 			state->compute_RBD_data();
+ 			state->compute_RBD_data();
 			state->center_of_mass = Vector(drand48() - 0.5, drand48() - 0.5, drand48() - 0.5);
 			state->linear_velocity = Vector(drand48() - 0.5, drand48() - 0.5, drand48() - 0.5);
 			state->angular_velocity = Vector(drand48() - 0.5, drand48() - 0.5, drand48() - 0.5);
@@ -200,9 +200,14 @@ namespace pba {
 			collisions.set_collision_surface(box);
 		}
 
-		pba::DynamicalState getState()
+		pba::DynamicalState get_State()
 		{
+			//std::shared_ptr<DynamicalStateData> s = dynamic_pointer_cast<DynamicalStateData>(state);
 			return state;
+		}
+		void set_state(RigidBodyState& s)
+		{
+			state = s;
 		}
 
 	private:
