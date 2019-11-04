@@ -2,6 +2,7 @@
 #define __PBA_COLLISIONSURFACE_H__
 
 #include "CollisionTriangle.h"
+#include "RigidBodyState.h"
 
 #include <vector>
 #include <memory>
@@ -30,6 +31,8 @@ namespace pba {
 		size_t triangle_size() const { return tri_elements.size(); }
 
 		bool hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const;
+
+		bool hit(const RigidBodyState& s, const size_t i, const double tmax, CollisionData& t) const;
 
 		bool hit(const Vector& P, const Vector& V, const double R, const double tmax, CollisionData& t) const;
 

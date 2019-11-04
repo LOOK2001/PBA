@@ -17,12 +17,6 @@ void pba::CollisionSurfaceRaw::addTriangle(const CollisionTriangle& t)
 
 bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const double tmax, CollisionData& t) const
 {
-// 	double _t = aa_bb.intersect((P - V*tmax), V);
-// 
-// 	// intersection inside the segment
-// 	if (!(_t > 0 && _t <= tmax))
-// 		return false;
-
 	double tc = tmax;
 	t.status = false;
 	bool isFirst = true;
@@ -32,8 +26,6 @@ bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const doubl
 	{
 		if (tri_elements[i]->hit(P, V, tmax, tc))
 		{
-			Vector test = P + (V * tmax);
-
 			// find the largest backwards T (tc)
 			if (isFirst){
 				t.t = tc;
@@ -52,36 +44,35 @@ bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const doubl
 	}
 
 	return t.status;
+}
 
+bool pba::CollisionSurfaceRaw::hit(const RigidBodyState& s, const size_t _i, const double tmax, CollisionData& t) const
+{
+	double tc = tmax;
+	t.status = false;
+	bool isFirst = true;
 
-// 	double tc = tmax;
-// 	t.status = false;
-// 
-// 	int i = 0;
-// 	for (; i < tri_elements.size(); i++)
-// 	{
-// 		// 1. Compute where and when collision takes place
-// 		// 2. If Xc is inside triangle, there is a collision
-// 		if (tri_elements[i]->hit(P, V, tc, t.t))
-// 		{
-// 			if (tc == tmax)
-// 			{
-// 				tc = t.t;
-// 				t.tri = tri_elements[i];
-// 				t.hit_index = i;
-// 				t.status = true;
-// 			}
-// 			else if (t.t > tc)
-// 			{
-// 				t.tri = tri_elements[i];
-// 				t.status = true;
-// 				t.hit_index = i;
-// 				tc = t.t;
-// 			}
-// 		}
-// 	}
-// 
-// 	return t.status;
+	// find all triangles that intersect
+	for (int j = 0; j < tri_elements.size(); j++)
+	{
+		if (tri_elements[j]->hit(s, _i, tmax, tc))
+		{
+			// find the largest backwards T (tc)
+			if (isFirst) {
+				t.t = tc;
+				t.tri = tri_elements[j];
+				t.status = true;
+				isFirst = false;
+			}
+			else if (tc > t.t) {
+				t.t = tc;
+				t.tri = tri_elements[j];
+				t.status = true;
+			}
+		}
+	}
+
+	return t.status;
 }
 
 void pba::CollisionSurfaceRaw::set_up_aabb()

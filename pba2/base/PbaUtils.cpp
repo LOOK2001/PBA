@@ -26,8 +26,6 @@ void pba::Display(CollisionSurface& s)
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
 	
 	glBegin(GL_TRIANGLES);
 	for (size_t i = 0; i < s->triangle_size(); i++)

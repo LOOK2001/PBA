@@ -6,6 +6,7 @@
 #include "things/BasicBoid.h"
 #include "things/BouncingBalls.h"
 #include "things/SphInATeapot.h"
+#include "things/BouncingRBD.h"
 #include "common/ObjParser.h"
 
 #define GLUT_DISABLE_ATEXIT_HACK
@@ -19,20 +20,14 @@ int main(int argc, char* argv[]) {
 
 	PbaViewer* viewer = PbaViewer::Instance();
 
-	CollisionSurface cube = pba::GenerateCollisionCube(1.0);
+	CollisionSurface cube = pba::GenerateCollisionCube(2.0);
 	{
 		cube->get_triangle(4)->set_invisable();
 		cube->get_triangle(5)->set_invisable();
 	}
 
-	ObjParser* objReader = new ObjParser();
-	objReader->ParseFile("C:/Xicheng/MyLife/College/Code/PBA/pba2/pba2/common/utah_teapot2.obj");
-	CollisionSurface teapot = makeCollisionSurface();
-	objReader->Fill(teapot);
-	teapot->toggle_wireframe();
-
+	BouncingRBDThing* BouncingBalls = new BouncingRBDThing;
 	//BouncingBallsThing* BouncingBalls = new BouncingBallsThing;
-	SphInATeapotThing* BouncingBalls = new SphInATeapotThing;
 	BouncingBalls->AddCollisionSurface(cube);
 	PbaThing balls = PbaThing(BouncingBalls);
 
@@ -49,3 +44,16 @@ int main(int argc, char* argv[]) {
 
 	return 1;
 }
+
+//{
+//	ObjParser* objReader = new ObjParser();
+//	objReader->ParseFile("C:/Xicheng/MyLife/College/Code/PBA/pba2/pba2/common/utah_teapot2.obj");
+//	CollisionSurface teapot = makeCollisionSurface();
+//	objReader->Fill(teapot);
+//	teapot->toggle_wireframe();
+//
+//	BouncingBallsThing* BouncingBalls = new BouncingBallsThing;
+//	SphInATeapotThing* BouncingBalls = new SphInATeapotThing;
+//	BouncingBalls->AddCollisionSurface(cube);
+//	PbaThing balls = PbaThing(BouncingBalls);
+//}

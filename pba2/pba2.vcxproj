@@ -199,6 +199,7 @@
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="things\BasicBoid.h" />
     <ClInclude Include="things\BouncingBalls.h" />
+    <ClInclude Include="things\BouncingRBD.h" />
     <ClInclude Include="things\ParticleOnASphere.h" />
     <ClInclude Include="things\RotatingCube.h" />
     <ClInclude Include="things\SphInATeapot.h" />

@@ -1,10 +1,44 @@
-#include "RigidBodyState.h"
+﻿#include "RigidBodyState.h"
 
 pba::RigidBodyStateData::RigidBodyStateData(const std::string& nam /*= "RBDDataNoName"*/)
 {
 	create_attr("r", Vector());
 	create_attr("p", Vector());
 	create_attr("tau", Vector());
+}
+
+pba::RigidBodyStateData::RigidBodyStateData(const RigidBodyStateData& d)
+{
+	center_of_mass = d.center_of_mass;
+	angular_rotation = d.angular_rotation;
+	linear_velocity = d.linear_velocity;
+	angular_velocity = d.angular_velocity;
+	center_of_mass_accel = d.center_of_mass_accel;
+	angular_accel = d.angular_accel;
+	angular_momentum = d.angular_momentum;
+
+	moment_of_inertia = d.inertia_moment();
+	inverse_moment_of_inertia = d.inverse_moi();
+	total_mass = d.totalmass();
+}
+
+pba::RigidBodyStateData& pba::RigidBodyStateData::operator=(const RigidBodyStateData& d)
+{
+	if (this != &d)
+	{
+		center_of_mass = d.center_of_mass;
+		angular_rotation = d.angular_rotation;
+		linear_velocity = d.linear_velocity;
+		angular_velocity = d.angular_velocity;
+		center_of_mass_accel = d.center_of_mass_accel;
+		angular_accel = d.angular_accel;
+		angular_momentum = d.angular_momentum;
+
+		moment_of_inertia = d.inertia_moment();
+		inverse_moment_of_inertia = d.inverse_moi();
+		total_mass = d.totalmass();
+	}
+	return *this;
 }
 
 void pba::RigidBodyStateData::compute_RBD_data()
@@ -69,5 +103,27 @@ void pba::RigidBodyStateData::recompute_MOI()
 	}
 
 	inverse_moment_of_inertia = inverse(moment_of_inertia);
+}
+
+double pba::RigidBodyStateData::total_engery() const
+{
+	double p1 = 0.5 * total_mass * std::pow(linear_velocity.magnitude(), 2);
+	double p2 = 0.5 * angular_velocity * moment_of_inertia * angular_velocity;
+	return (p1 + p2);
+}
+
+pba::Vector pba::RigidBodyStateData::vert_pos(const size_t p) const
+{
+	return pos(p);
+}
+
+pba::RigidBodyState pba::CreateRigidBody(const std::string& nam /*= "RigidBodyDataNoName"*/)
+{
+	return RigidBodyState(new RigidBodyStateData());
+}
+
+pba::RigidBodyState pba::copy(const RigidBodyState d)
+{
+	return RigidBodyState(new RigidBodyStateData(*d.get()));
 }
 

@@ -21,10 +21,14 @@ namespace pba
 		}
 
 		virtual void handle_collisions(const double dt, DynamicalState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
-		//virtual void handle_collisions(const double dt, RigidBodyState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
+		virtual void handle_collisions(const double dt, RigidBodyState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
 		//virtual void handle_collisions(const double dt, SoftBodyState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
 
 		void set_collision_surface(CollisionSurface& c);
+
+		void use_tree() { usetree = true; }
+		void dont_use_tree() { usetree = false; }
+		void toggle_tree() { usetree = !usetree; }
 
 	protected:
 		CollisionSurface surf;
@@ -48,7 +52,7 @@ namespace pba
 		{}
 		~ElasticRBDCollisionHandler() {}
 
-		void handle_collisions(const double dt, RigidBodyState& s);
+		void handle_collisions(const double dt, RigidBodyState& S);
 		void set_CR(const float v) { coeff_of_restitution = v; }
 
 	private:

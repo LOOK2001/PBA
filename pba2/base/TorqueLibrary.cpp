@@ -2,6 +2,8 @@
 
 void pba::TorqueFromForce::compute(RigidBodyState& s, const double dt)
 {
+	force->compute(s, dt);
+
 	Vector tau;
 	for (int i = 0; i < s->nb(); i++)
 	{

@@ -91,13 +91,13 @@ PbaViewer::PbaViewer() :
    title          ( string("PBA Viewer") ),
    mouse_x        ( 0 ),
    mouse_y        ( 0 ),
-   camera_fov     (35.0), // 120, 35.0
+   camera_fov     (85.0), // 120, 35.0
    camera_aspect  (1.0),
    camera_near    (0.01),
    camera_far     (10000.0),
    camera_eye_x   (0.0),
    camera_eye_y   (0.0),
-   camera_eye_z   (-5.0),
+   camera_eye_z   (-5.0), // -5.0
    camera_view_x  (0.0),
    camera_view_y  (0.0),
    camera_view_z  (0.0),

@@ -214,5 +214,6 @@
     <ClInclude Include="include\TorqueLibrary.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="things\BouncingRBD.h" />
   </ItemGroup>
 </Project>

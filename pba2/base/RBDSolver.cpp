@@ -9,14 +9,13 @@ pba::AdvanceRotationAndCOM::AdvanceRotationAndCOM(RigidBodyState& pq) :
 void pba::AdvanceRotationAndCOM::solve(const double dt)
 {
 	double value = PQ->angular_velocity.magnitude();
-	PQ->angular_rotation = rotation(PQ->angular_velocity, -value * dt);
+	PQ->angular_rotation = rotation(PQ->angular_velocity, -value * dt) * PQ->angular_rotation;
 }
 
 pba::AdvanceAngularVelocityAndVelocity::AdvanceAngularVelocityAndVelocity(RigidBodyState& pq, Force& f) :
 	PQ(pq)
 {
 	tau = CreateTorqueFromForce(f);
-
 }
 
 void pba::AdvanceAngularVelocityAndVelocity::solve(const double dt)
@@ -47,20 +46,42 @@ void pba::AdvanceAngularVelocityAndVelocity::solve(const double dt)
 	}
 }
 
+pba::GISolver pba::CreateAdvanceRotation(RigidBodyState& pq)
+{
+	return GISolver(new AdvanceRotationAndCOM(pq));
+}
+
+pba::GISolver pba::CreateAdvanceAngularVelocity(RigidBodyState& pq, Force& f)
+{
+	return GISolver(new AdvanceAngularVelocityAndVelocity(pq, f));
+}
+
+
+pba::AdvanceRotationWithCollisions::AdvanceRotationWithCollisions(RigidBodyState& pq, ElasticRBDCollisionHandler& coll):
+	PQ(pq), CS(coll)
+{}
+
 void pba::AdvanceRotationWithCollisions::solve(const double dt)
 {
 	// Update Rotation
 	double value = PQ->angular_velocity.magnitude();
-	PQ->angular_rotation = rotation(PQ->angular_velocity, -value * dt);
+	PQ->angular_rotation = rotation(PQ->angular_velocity, -value * dt)* PQ->angular_rotation;
 
 	// Update Position
 	PQ->center_of_mass += PQ->linear_velocity * dt;
 
 	for (int i = 0; i < PQ->nb(); i++)
 	{
-		Vector pos = PQ->center_of_mass + PQ->angular_rotation * PQ->pos(i);
+		Vector pos = PQ->center_of_mass + PQ->angular_rotation * PQ->get_vector_attr("p", i);
 		PQ->set_pos(i, pos);
 
-		PQ->set_attr("r", i, (PQ->angular_rotation * pos));
+		PQ->set_attr("r", i, (PQ->angular_rotation * PQ->get_vector_attr("p", i)));
 	}
+
+	CS.handle_collisions(dt, PQ);
+}
+
+pba::GISolver pba::CreateAdvanceRotation(RigidBodyState& pq, ElasticRBDCollisionHandler& cs)
+{
+	return GISolver(new AdvanceRotationWithCollisions(pq, cs));
 }

@@ -42,7 +42,7 @@ namespace pba
 	class AdvanceRotationWithCollisions :public GISolverBase
 	{
 	public:
-		AdvanceRotationWithCollisions(RigidBodyState& pq, ElasticCollisionHandler& coll);
+		AdvanceRotationWithCollisions(RigidBodyState& pq, ElasticRBDCollisionHandler& coll);
 		~AdvanceRotationWithCollisions() {}
 
 		void init() {}
@@ -50,9 +50,9 @@ namespace pba
 
 	private:
 		RigidBodyState PQ;
-		ElasticCollisionHandler& CS;
+		ElasticRBDCollisionHandler& CS;
 	};
-	GISolver CreateAdvanceRotation(RigidBodyState& pq, ElasticCollisionHandler& cs);
+	GISolver CreateAdvanceRotation(RigidBodyState& pq, ElasticRBDCollisionHandler& cs);
 }
 
 #endif // __PBA_RBDSOLVER_H__

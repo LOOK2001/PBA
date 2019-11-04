@@ -12,6 +12,17 @@ namespace pba
 		~SimpleGravityForce(){}
 
 		void compute(pba::DynamicalState& pq, const double dt);
+		void compute(RigidBodyState& s, const double dt)
+		{
+			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, RigidBodyStateData>(s);
+			compute(ss, dt);
+		}
+		//void compute(SoftBodyState& s, const double dt);
+		void compute(SPHState& s, const double dt)
+		{
+			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, SPHStateData>(s);
+			compute(ss, dt);
+		}
 
 		void set_gravity_constant(const double v) { G = G.unitvector() * v; }
 		const double get_gravity_constant() const { return G.magnitude(); }

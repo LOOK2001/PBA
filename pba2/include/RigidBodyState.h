@@ -12,7 +12,7 @@ namespace pba
 	public:
 		RigidBodyStateData(const std::string& nam = "RBDDataNoName");
 		RigidBodyStateData(const RigidBodyStateData& d);
-		~RigidBodyStateData();
+		~RigidBodyStateData() {};
 
 		RigidBodyStateData& operator= (const RigidBodyStateData& d);
 
@@ -20,7 +20,7 @@ namespace pba
 		void compute_M();
 		void recompute_MOI();
 
-		const Matrix& inertial_moment() const { return moment_of_inertia; }
+		const Matrix& inertia_moment() const { return moment_of_inertia; }
 		const Matrix& inverse_moi() const { return inverse_moment_of_inertia; }
 		const float totalmass() const { return total_mass; }
 
