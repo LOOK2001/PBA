@@ -1,7 +1,7 @@
 #include "Vector.h"
 #include "AABB.h"
 #include "CollisionSurface.h"
-//#include "RigidBodyState.h"
+#include "RigidBodyState.h"
 
 
 namespace pba {
@@ -19,9 +19,16 @@ namespace pba {
 
 		bool hit(const RigidBodyState& s, const size_t i, const double tmax, CollisionData& t) const;
 
-		//bool hit()
-
 		const size_t nbObject() const { return object_list.size(); }
+
+		const AABB& get_AABB() const { return aabb; }
+		const TraceTree* get_Node(int index) const {
+			if (index == 1)
+				return node1;
+			else
+				return node2;
+		}
+		const std::vector<CollisionTriangle>& get_ObjList() const { return object_list; }
 
 	private:
 		AABB aabb;

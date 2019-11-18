@@ -47,6 +47,8 @@ void pba::Display(CollisionSurface& s)
 		v = s->get_triangle(i)->vertex(2);
 		glVertex3f(v.X(), v.Y(), v.Z());
 		//glNormal3f(v.X(), v.Y(), v.Z());
+
+		s->get_triangle(i)->decay();
 	}
 
 	if (!testAABB.empty())

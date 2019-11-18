@@ -9,7 +9,7 @@ pba::AdvanceRotationAndCOM::AdvanceRotationAndCOM(RigidBodyState& pq) :
 void pba::AdvanceRotationAndCOM::solve(const double dt)
 {
 	double value = PQ->angular_velocity.magnitude();
-	PQ->angular_rotation = rotation(PQ->angular_velocity, -value * dt) * PQ->angular_rotation;
+	PQ->angular_rotation = rotation(PQ->angular_velocity.unitvector(), -value * dt) * PQ->angular_rotation;
 }
 
 pba::AdvanceAngularVelocityAndVelocity::AdvanceAngularVelocityAndVelocity(RigidBodyState& pq, Force& f) :
@@ -65,7 +65,7 @@ void pba::AdvanceRotationWithCollisions::solve(const double dt)
 {
 	// Update Rotation
 	double value = PQ->angular_velocity.magnitude();
-	PQ->angular_rotation = rotation(PQ->angular_velocity, -value * dt)* PQ->angular_rotation;
+	PQ->angular_rotation = rotation(PQ->angular_velocity.unitvector(), -value * dt)* PQ->angular_rotation;
 
 	// Update Position
 	PQ->center_of_mass += PQ->linear_velocity * dt;

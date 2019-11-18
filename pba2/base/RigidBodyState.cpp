@@ -49,6 +49,7 @@ pba::RigidBodyStateData& pba::RigidBodyStateData::operator=(const RigidBodyState
 	return *this;
 }
 
+// initialize the RBD data
 void pba::RigidBodyStateData::compute_RBD_data()
 {
 	for (int i = 0; i < nb(); i++) {
@@ -77,6 +78,7 @@ void pba::RigidBodyStateData::compute_RBD_data()
 		set_attr("r", i, r);
 	}
 
+	// Update the moment_of_inertia
 	recompute_MOI();
 
 	angular_momentum = moment_of_inertia * angular_velocity;

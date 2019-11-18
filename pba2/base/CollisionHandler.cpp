@@ -25,7 +25,7 @@ void pba::CollisionHandler::set_collision_surface(CollisionSurface& c)
 		}
 	}
 
-	tree = new TraceTree(llc, urc, 0, 10, 4);
+	tree = new TraceTree(llc, urc, 0, 5, 4);
 	tree->addObject(surf);
 	tree->Divide();
 
@@ -61,11 +61,10 @@ void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalS
 	}
 	else
 	{
-#pragma omp parallel for
+//#pragma omp parallel for
 		for (int i = 0; i < S->nb(); i++)
 		{
 			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
-			// check intersection with top bounding box
 			while (tree->hit(S->pos(i), S->vel(i), CD.t, CD))
 			{		
 				Vector v = S->vel(i);
@@ -88,14 +87,12 @@ void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalS
 
 void pba::ElasticRBDCollisionHandler::handle_collisions(const double dt, RigidBodyState& S)
 {
-	double vn;
-	Vector vp, vr;
 	bool isHit = false;
 
 	if (!usetree)
 	{
 		pba::CollisionData CDLarg{ -dt, nullptr, false, false, false, 0 };
-#pragma omp parallel for
+//#pragma omp parallel for
 		for (int i = 0; i < S->nb(); i++)
 		{
 			pba::CollisionData CD{ dt, nullptr, false, false, false, i };// = new pba::CollisionData;
@@ -103,8 +100,7 @@ void pba::ElasticRBDCollisionHandler::handle_collisions(const double dt, RigidBo
 			{
 				isHit = true;
 				// find the largest backwards T (tc) for all particles and triangles
-				if (CD.t > CDLarg.t)
-				{
+				if (CD.t > CDLarg.t){
 					CDLarg = CD;
 				}
 			}
@@ -115,8 +111,8 @@ void pba::ElasticRBDCollisionHandler::handle_collisions(const double dt, RigidBo
 			Vector norm = CDLarg.tri->N();
 			double tmax = CDLarg.t;
 
-			// 1. update rotation matrix
-			Matrix u = rotation(S->angular_velocity, S->angular_velocity.magnitude() * tmax) * S->angular_rotation;
+			// 1. update U
+			Matrix u = rotation(S->angular_velocity.unitvector(), S->angular_velocity.magnitude() * tmax) * S->angular_rotation;
 
 			// Solve for A
 			Vector q = inverse(S->inertia_moment()) * (S->get_vector_attr("r", CDLarg.hit_index) ^ norm);
@@ -162,6 +158,7 @@ void pba::ElasticRBDCollisionHandler::handle_collisions(const double dt, RigidBo
 				S->set_vel(i, vel);
 			}
 
+			CDLarg.tri->set_hit_color(Color(1.0, 1.0, 1.0, 1.0));
 			handle_collisions(tmax, S);
 		}
 	}
@@ -183,6 +180,59 @@ void pba::ElasticRBDCollisionHandler::handle_collisions(const double dt, RigidBo
 						CDLarg = CD;
 					}
 				}
+			}
+		}
+	}
+}
+
+void pba::ElasticSBDCollisionHandler::handle_collisions(const double dt, SoftBodyState& S)
+{
+	double vn;
+	Vector vp, vr;
+	if (!usetree)
+	{
+		for (int i = 0; i < S->nb(); i++)
+		{
+			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
+			if (surf->hit(S->pos(i), S->vel(i), CD.t, CD))
+			{
+				Vector v = S->vel(i);
+				Vector norm = CD.tri->N();
+				vn = norm * S->vel(i);
+				vp = S->vel(i) - norm * vn;
+				vr = (coeff_of_restitution * vp) - (0.1 * norm * vn);
+
+				// set new point
+				Vector xc = S->pos(i) - (S->vel(i) * CD.t);
+				Vector x = xc + vr * CD.t;
+				S->set_pos(i, x);
+
+				// set reflective velocity
+				S->set_vel(i, vr);
+			}
+		}
+	}
+	else
+	{
+		//#pragma omp parallel for
+		for (int i = 0; i < S->nb(); i++)
+		{
+			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
+			while (tree->hit(S->pos(i), S->vel(i), CD.t, CD))
+			{
+				Vector v = S->vel(i);
+				Vector norm = CD.tri->N();
+				vn = norm * S->vel(i);
+				vp = S->vel(i) - norm * vn;
+				vr = (surf->coeff_sticky() * vp) - (surf->coeff_restitution() * norm * vn);
+
+				// set new point
+				Vector xc = S->pos(i) - (S->vel(i) * CD.t);
+				Vector x = xc + vr * CD.t;
+				S->set_pos(i, x);
+
+				// set reflective velocity
+				S->set_vel(i, vr);
 			}
 		}
 	}

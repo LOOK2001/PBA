@@ -18,6 +18,28 @@ namespace pba{
 	typedef std::shared_ptr<GISolverBase> GISolver;
 
 
+	class GISolverSubstep : public GISolverBase
+	{
+	public:
+		GISolverSubstep(GISolver& s, int nbsteps) :
+			_solver(s), _steps(nbsteps)
+		{}
+
+		~GISolverSubstep() {}
+
+		void init() { _solver->init(); }
+
+		void solve(const double dt)
+		{
+			const double dta = dt / _steps;
+			for (int i = 0; i < _steps; i++) { _solver->solve(dta); }
+		}
+
+	private:
+		GISolver _solver;
+		double _steps;
+	};
+
 	class LeapFrogSolver : public GISolverBase
 	{
 	public:
@@ -58,6 +80,7 @@ namespace pba{
 		GISolver a;
 		GISolver b;
 	};
+	GISolver CreateGISolverSubstep(GISolver& s, int nbsteps);
 	GISolver CreateForwardEulerSolver(GISolver& A, GISolver& B);
 	GISolver CreateLeapFrogSolver(GISolver& A, GISolver& B);
 }

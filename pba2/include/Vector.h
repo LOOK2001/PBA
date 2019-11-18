@@ -39,6 +39,13 @@ class Vector
       xyz[2] = c; 
    }
 
+   Vector(const double v)
+   {
+	   xyz[0] = v;
+	   xyz[1] = v;
+	   xyz[2] = v;
+   }
+
    ~Vector(){}
 
    //!  Set all three components

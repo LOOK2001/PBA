@@ -86,7 +86,7 @@ const bool pba::ObjParser::Fill(DynamicalState& g)
 		}
 	}
 
-	g->set_mass(index, 1);
+	g->set_mass(index, 100);
 
 	return true;
 }

@@ -4,7 +4,7 @@
 #include "CollisionSurface.h"
 #include "DynamicalState.h"
 #include "RigidBodyState.h"
-//#include "SoftBodyState.h"
+#include "SoftBodyState.h"
 #include "TraceTree.h"
 #include <iostream>
 
@@ -22,7 +22,7 @@ namespace pba
 
 		virtual void handle_collisions(const double dt, DynamicalState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
 		virtual void handle_collisions(const double dt, RigidBodyState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
-		//virtual void handle_collisions(const double dt, SoftBodyState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
+		virtual void handle_collisions(const double dt, SoftBodyState& s) { std::cout << "CollisionHandler::handle_collisions(double,DynamicalState) called\n"; };
 
 		void set_collision_surface(CollisionSurface& c);
 
@@ -53,6 +53,21 @@ namespace pba
 		~ElasticRBDCollisionHandler() {}
 
 		void handle_collisions(const double dt, RigidBodyState& S);
+		void set_CR(const float v) { coeff_of_restitution = v; }
+
+	private:
+		float coeff_of_restitution;
+	};
+
+	class ElasticSBDCollisionHandler : public CollisionHandler
+	{
+	public:
+		ElasticSBDCollisionHandler() :
+			coeff_of_restitution(1.0)
+		{};
+		~ElasticSBDCollisionHandler() {}
+
+		void handle_collisions(const double dt, SoftBodyState& s);
 		void set_CR(const float v) { coeff_of_restitution = v; }
 
 	private:

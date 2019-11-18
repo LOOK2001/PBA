@@ -67,6 +67,7 @@ class PbaThingyDingy
     void setInvisible() { visible = false; }
     void setVisible() { visible = true; }
     void toggleVisible() { visible = !visible; }
+	void toggleAnimate() { animate = !animate; }
 
     //
     //  Dynamics interface

@@ -1,4 +1,4 @@
-#include "CollisionTriangle.h"
+﻿#include "CollisionTriangle.h"
 
 pba::CollisionTriangleRaw::CollisionTriangleRaw(const Vector& p0, const Vector& p1, const Vector& p2)
 {
@@ -8,6 +8,8 @@ pba::CollisionTriangleRaw::CollisionTriangleRaw(const Vector& p0, const Vector& 
 	e1 = P1 - P0; e2 = P2 - p0;
 	normal = (e1 ^ e2);
 	normal.normalize();
+
+	decayrate = 0.95;
 }
 
 bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const double tmax, double& t)
@@ -23,6 +25,8 @@ bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const doub
 	Vector xc = P - (V * t);
 
 	// not a collision
+	if (tmax == 0)
+		//return false;
 	if ((t * tmax < 0) || (((tmax - t) / tmax) < 1e-6))
 		return false;
 
@@ -31,9 +35,10 @@ bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const doub
 
 bool pba::CollisionTriangleRaw::hit(const RigidBodyState& s, const size_t i, const double tmax, double& t)
 {
-	Matrix u = rotation(s->angular_velocity, s->angular_velocity.magnitude() * tmax) * s->angular_rotation;
+	const Vector& w = s->angular_velocity;
+	Matrix u = rotation(w, s->angular_velocity.magnitude() * tmax) * s->angular_rotation;
 	Vector x0 = s->center_of_mass - s->linear_velocity * tmax + u * s->get_vector_attr("p", i);
-	Vector x1 = s->pos(i);
+	const Vector& x1 = s->pos(i);
 
 	// Detect a collision has happened
 	double f0 = (x0 - P0) * normal;
@@ -49,7 +54,7 @@ bool pba::CollisionTriangleRaw::hit(const RigidBodyState& s, const size_t i, con
 	{
 		t = 0.5 * (t0 + t1);
 
-		u = rotation(s->angular_velocity, s->angular_velocity.magnitude() * t) * s->angular_rotation;
+		u = rotation(s->angular_velocity.unitvector(), s->angular_velocity.magnitude() * t) * s->angular_rotation;
 		xc = s->center_of_mass - s->linear_velocity * t + u * s->get_vector_attr("p", i);
 		fc = (xc - P0) * normal;
 
@@ -71,7 +76,7 @@ bool pba::CollisionTriangleRaw::hit(const RigidBodyState& s, const size_t i, con
 			break;
 	}
 
-	u = rotation(s->angular_velocity, s->angular_velocity.magnitude() * t)* s->angular_rotation;
+	u = rotation(s->angular_velocity.unitvector(), s->angular_velocity.magnitude() * t)* s->angular_rotation;
 	xc = s->center_of_mass - s->linear_velocity*t + u * s->get_vector_attr("p", i);
 	
 	// not a collision
@@ -79,6 +84,16 @@ bool pba::CollisionTriangleRaw::hit(const RigidBodyState& s, const size_t i, con
 		return false;
 
 	return is_in_triangle(xc);
+}
+
+void pba::CollisionTriangleRaw::decay()
+{
+	if (hitcolor[0] == 0.0)
+		return;
+
+	hitcolor *= decayrate;
+	if (hitcolor[0] < 0.01)
+		hitcolor = Color(0.0, 0.0, 0.0, 0.0);
 }
 
 bool pba::CollisionTriangleRaw::is_in_triangle(const Vector& X)

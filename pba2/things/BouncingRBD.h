@@ -50,10 +50,8 @@ namespace pba {
 			force = CreateSimpleGravityForce(pba::Vector(0, -1.0, 0));
 			GISolver solvera = CreateAdvanceRotation(state, collisions);
 			GISolver solverb = CreateAdvanceAngularVelocity(state, force);
-			//basicsolver = CreateLeapFrogSolver(solvera, solverb);
-			//basicsolver = CreateGISolverSixthOrder(basicsolver);
-			//solver = CreateGISolverSubstep(basicsolver, 1);
-			solver = CreateLeapFrogSolver(solvera, solverb);
+			basicsolver = CreateLeapFrogSolver(solvera, solverb);
+			solver = CreateGISolverSubstep(basicsolver, 5);
 			Reset();
 			std::cout << name << " constructed\n";
 		};
@@ -67,34 +65,18 @@ namespace pba {
 		// Callback functions
 		void Display()
 		{
-			if (display_pp)
-			{
-// 				glPointSize(5.0);
-// 				glBegin(GL_LINES);
-// 				glColor3f(1.0, 1.0, 1.0);
-// 				for (size_t i = 0; i < poincare.size(); i++)
-// 				{
-// 					const float q = poincare.ValueX(i);
-// 					const float p = poincare.ValueY(i);
-// 					glVertex2f(q, p);
-// 				}
-// 				glEnd();
-			}
-			else
-			{
-				pba::Display(box);
+			pba::Display(box);
 
-				glPointSize(5.0);
-				glBegin(GL_POINTS);
-				for (size_t i = 0; i < state->nb(); i++)
-				{
-					const Color& ci = state->ci(i);
-					const pba::Vector& v = state->vert_pos(i);
-					glColor3f(ci.red(), ci.green(), ci.blue());
-					glVertex3f(v.X(), v.Y(), v.Z());
-				}
-				glEnd();
+			glPointSize(5.0);
+			glBegin(GL_POINTS);
+			for (size_t i = 0; i < state->nb(); i++)
+			{
+				const Color& ci = state->ci(i);
+				const pba::Vector& v = state->vert_pos(i);
+				glColor3f(ci.red(), ci.green(), ci.blue());
+				glVertex3f(v.X(), v.Y(), v.Z());
 			}
+			glEnd();
 		};
 
 		void Keyboard(unsigned char key, int x, int y)
@@ -117,8 +99,8 @@ namespace pba {
 
 			if (key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9')
 			{
-				//solver = CreateGISolverSubstep(basicsolver, int(key) - 48);
-				//std::cout << "Switched to solver with " << int(key) - 48 << " substeps\n";
+				solver = CreateGISolverSubstep(basicsolver, int(key) - 48);
+				std::cout << "Switched to solver with " << int(key) - 48 << " substeps\n";
 			}
 
 			if (key == 'm')

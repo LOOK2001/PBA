@@ -5,6 +5,25 @@
 
 namespace pba
 {
+	class AccumulatingForce : public ForceBase
+	{
+	public:
+		AccumulatingForce() {}
+		~AccumulatingForce() {}
+
+		void compute(DynamicalState& pq, const double dt);
+		void compute(RigidBodyState& s, const double dt);
+		void compute(SoftBodyState& s, const double dt);
+		void compute(SPHState& s, const double dt);
+
+		void add(Force& f);
+
+	private:
+		std::vector<Force> forces;
+	};
+	Force CreateAccumulatingForce();
+
+
 	class SimpleGravityForce : public ForceBase
 	{
 	public:
@@ -31,23 +50,6 @@ namespace pba
 		pba::Vector G;
 	};
 	pba::Force CreateSimpleGravityForce(const pba::Vector& G);
-
-
-	class AccumulatingForce : public ForceBase
-	{
-	public:
-		AccumulatingForce() {}
-		~AccumulatingForce() {}
-
-		void compute(pba::DynamicalState& pq, const double dt);
-		void compute(pba::SPHState& s, const double dt);
-
-		void add(Force& f);
-
-	private:
-		std::vector<Force> forces;
-	};
-	Force CreateAccumulatingForce();
 
 
 	class AccumulatingBoidForce : public pba::ForceBase
@@ -129,6 +131,16 @@ namespace pba
 		~AccumulatingGravityForce() {};
 
 		void compute(pba::DynamicalState& pq, const double dt);
+		void compute(RigidBodyState& s, const double dt)
+		{
+			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, RigidBodyStateData>(s);
+			compute(ss, dt);
+		}
+		void compute(SoftBodyState& s, const double dt)
+		{
+			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, SoftBodyStateData>(s);
+			compute(ss, dt);
+		}
 		void compute(SPHState& s, const double dt)
 		{
 			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, SPHStateData>(s);
@@ -141,6 +153,77 @@ namespace pba
 		Vector G;
 	};
 	pba::Force CreateAccumulatingGravityForce(const Vector& G);
+
+
+	class AccumulatingStrutForce : public pba::ForceBase
+	{
+	public:
+		AccumulatingStrutForce(const double g, const double f) :
+			spring(g),
+			friction(f)
+		{}
+		~AccumulatingStrutForce() {};
+
+		void compute(pba::SoftBodyState& pq, const double dt);
+
+		void set_strength(const double v) { spring = v; };
+		const double get_strength() const { return spring; };
+
+		void set_friction(const double v) { friction = v; };
+		const double get_friction() const { return friction; };
+
+	private:
+		double spring;
+		double friction;
+	};
+	pba::Force CreateAccumulatingStrutForce(const double G, const double f);
+
+
+	class AccumulatingStrutAreaForce : public pba::ForceBase
+	{
+	public:
+		AccumulatingStrutAreaForce(const double g, const double f) :
+			spring(g),
+			friction(f)
+		{}
+		~AccumulatingStrutAreaForce() {};
+
+		void compute(pba::SoftBodyState& pq, const double dt);
+
+		void set_strength(const double v) { spring = v; };
+		const double get_strength() const { return spring; };
+
+		void set_friction(const double v) { friction = v; };
+		const double get_friction() const { return friction; };
+
+	private:
+		double spring;
+		double friction;
+	};
+	pba::Force CreateAccumulatingStrutAreaForce(const double G, const double f);
+
+	class AccumulatingStrutBendForce : public pba::ForceBase
+	{
+	public:
+		AccumulatingStrutBendForce(const double g, const double f) :
+			spring(g),
+			friction(f)
+		{}
+		~AccumulatingStrutBendForce() {};
+
+		void compute(pba::SoftBodyState& pq, const double dt);
+
+		void set_strength(const double v) { spring = v; };
+		const double get_strength() const { return spring; };
+
+		void set_friction(const double v) { friction = v; };
+		const double get_friction() const { return friction; };
+
+	private:
+		double spring;
+		double friction;
+	};
+	pba::Force CreateAccumulatingStrutBendForce(const double G, const double f);
 }
 
 #endif

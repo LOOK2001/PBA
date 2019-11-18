@@ -156,9 +156,13 @@
     <ClCompile Include="base\PbaViewer.cpp" />
     <ClCompile Include="base\RBDSolver.cpp" />
     <ClCompile Include="base\RigidBodyState.cpp" />
+    <ClCompile Include="base\SBDSolver.cpp" />
+    <ClCompile Include="base\SoftBodyState.cpp" />
+    <ClCompile Include="base\SoftEdge.cpp" />
     <ClCompile Include="base\SPHForce.cpp" />
     <ClCompile Include="base\SPHSolver.cpp" />
     <ClCompile Include="base\SPHState.cpp" />
+    <ClCompile Include="base\Strut.cpp" />
     <ClCompile Include="base\Torque.cpp" />
     <ClCompile Include="base\TorqueLibrary.cpp" />
     <ClCompile Include="base\TraceTree.cpp" />
@@ -190,9 +194,13 @@
     <ClInclude Include="include\PbaViewer.h" />
     <ClInclude Include="include\RBDSolver.h" />
     <ClInclude Include="include\RigidBodyState.h" />
+    <ClInclude Include="include\SBDSolver.h" />
+    <ClInclude Include="include\SoftBodyState.h" />
+    <ClInclude Include="include\SoftEdge.h" />
     <ClInclude Include="include\SPHForce.h" />
     <ClInclude Include="include\SPHSolver.h" />
     <ClInclude Include="include\SPHState.h" />
+    <ClInclude Include="include\Strut.h" />
     <ClInclude Include="include\Torque.h" />
     <ClInclude Include="include\TorqueLibrary.h" />
     <ClInclude Include="include\TraceTree.h" />
@@ -202,6 +210,7 @@
     <ClInclude Include="things\BouncingRBD.h" />
     <ClInclude Include="things\ParticleOnASphere.h" />
     <ClInclude Include="things\RotatingCube.h" />
+    <ClInclude Include="things\SBDAreaCloth.h" />
     <ClInclude Include="things\SphInATeapot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

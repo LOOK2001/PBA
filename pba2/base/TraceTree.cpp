@@ -1,4 +1,5 @@
 ﻿#include "TraceTree.h"
+#include <stack>
 
 #include "PbaUtils.h"
 
@@ -144,52 +145,107 @@ bool pba::TraceTree::hit(const Vector& P, const Vector& V, const double tmax, Co
 {
 	t.status = false;
 
-	if (!aabb.isInside(P - V * tmax))
-		return false;
-
-	if (node1) {
-		if (node1->hit(P, V, tmax, t))
-			return true;
-	}	
-	if (node2) {
-		if (node2->hit(P, V, tmax, t))
-			return true;
-	}
-
-	// until to get the deepest box,
-	// check intersection with triangles
-	double tc = tmax;
-	bool isFirst = true;
-
-	// find all triangles that intersect
-	for (int i = 0; i < object_list.size(); i++)
+	std::stack<const pba::TraceTree*> stack;
+	stack.push(this);
+	while (!stack.empty())
 	{
-		if (object_list[i]->hit(P, V, tmax, tc))
+		const TraceTree* node = stack.top();
+		stack.pop();
+		if (!node)
+			continue;
+
+		if (!node->get_AABB().isInside(P - V * tmax))
+			continue;
+
+		if (!node->get_Node(1) && !node->get_Node(2))
 		{
-			// find the largest backwards T (tc)
-			if (isFirst) {
-				t.t = tc;
-				t.tri = object_list[i];
-				t.hit_index = i;
-				t.status = true;
-				isFirst = false;
+			// the node is leaf
+			// until to get the deepest box,
+			// check intersection with triangles
+			double tc = tmax;
+			bool isFirst = true;
+
+			const std::vector<CollisionTriangle>& _objectList = node->get_ObjList();
+			// find all triangles that intersect
+			for (int i = 0; i < _objectList.size(); i++)
+			{
+				if (_objectList[i]->hit(P, V, tmax, tc))
+				{
+					// find the largest backwards T (tc)
+					if (isFirst) {
+						t.t = tc;
+						t.tri = _objectList[i];
+						t.hit_index = i;
+						t.status = true;
+						isFirst = false;
+					}
+					else if (tc > t.t) {
+						t.t = tc;
+						t.tri = _objectList[i];
+						t.hit_index = i;
+						t.status = true;
+					}
+				}
 			}
-			else if (tc > t.t) {
-				t.t = tc;
-				t.tri = object_list[i];
-				t.hit_index = i;
-				t.status = true;
-			}
+			return t.status;
+		}
+		else
+		{
+			if(node->get_Node(1)) stack.push(node->get_Node(1));
+			if(node->get_Node(2)) stack.push(node->get_Node(2));
 		}
 	}
-	return t.status;
+	return false;
+
+
+// 	t.status = false;
+// 
+// 	if (!aabb.isInside(P - V * tmax))
+// 		return false;
+// 
+// 	if (node1) {
+// 		if (node1->hit(P, V, tmax, t))
+// 			return true;
+// 	}	
+// 	if (node2) {
+// 		if (node2->hit(P, V, tmax, t))
+// 			return true;
+// 	}
+// 
+// 	// until to get the deepest box,
+// 	// check intersection with triangles
+// 	double tc = tmax;
+// 	bool isFirst = true;
+// 
+// 	// find all triangles that intersect
+// 	for (int i = 0; i < object_list.size(); i++)
+// 	{
+// 		if (object_list[i]->hit(P, V, tmax, tc))
+// 		{
+// 			// find the largest backwards T (tc)
+// 			if (isFirst) {
+// 				t.t = tc;
+// 				t.tri = object_list[i];
+// 				t.hit_index = i;
+// 				t.status = true;
+// 				isFirst = false;
+// 			}
+// 			else if (tc > t.t) {
+// 				t.t = tc;
+// 				t.tri = object_list[i];
+// 				t.hit_index = i;
+// 				t.status = true;
+// 			}
+// 		}
+// 	}
+// 	return t.status;
 }
 
 bool pba::TraceTree::hit(const RigidBodyState& s, const size_t i, const double tmax, CollisionData& t) const
 {
 	t.status = false;
 
-	Matrix u = rotation(s->angular_velocity, s->angular_velocity.magnitude() * tmax) * s->angular_rotation;
+	Matrix u = rotation(s->angular_velocity.unitvector(), s->angular_velocity.magnitude() * tmax) * s->angular_rotation;
 	Vector x0 = s->center_of_mass - s->linear_velocity * tmax + u * s->get_vector_attr("p", i);
 	Vector x1 = s->pos(i);
 

@@ -107,6 +107,18 @@
     <ClCompile Include="base\TorqueLibrary.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="base\SoftEdge.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="base\SoftBodyState.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Strut.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="base\SBDSolver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Color.h">
@@ -215,5 +227,10 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="things\BouncingRBD.h" />
+    <ClInclude Include="include\SoftEdge.h" />
+    <ClInclude Include="include\SoftBodyState.h" />
+    <ClInclude Include="include\Strut.h" />
+    <ClInclude Include="include\SBDSolver.h" />
+    <ClInclude Include="things\SBDAreaCloth.h" />
   </ItemGroup>
 </Project>
