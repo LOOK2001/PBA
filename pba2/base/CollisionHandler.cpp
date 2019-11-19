@@ -56,7 +56,7 @@ void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalS
 
 				// set reflective velocity
 				S->set_vel(i, vr);
- 			}
+			}
 		}
 	}
 	else
@@ -194,7 +194,7 @@ void pba::ElasticSBDCollisionHandler::handle_collisions(const double dt, SoftBod
 		for (int i = 0; i < S->nb(); i++)
 		{
 			pba::CollisionData CD{ dt, nullptr, false, false, false, 0 };// = new pba::CollisionData;
-			if (surf->hit(S->pos(i), S->vel(i), CD.t, CD))
+			while (surf->hit(S->pos(i), S->vel(i), CD.t, CD))
 			{
 				Vector v = S->vel(i);
 				Vector norm = CD.tri->N();

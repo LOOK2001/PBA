@@ -27,14 +27,14 @@ bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const doubl
 		if (tri_elements[i]->hit(P, V, tmax, tc))
 		{
 			// find the largest backwards T (tc)
-			if (isFirst){
+			if (isFirst) {
 				t.t = tc;
 				t.tri = tri_elements[i];
 				t.hit_index = i;
 				t.status = true;
 				isFirst = false;
 			}
-			else if (tc > t.t){
+			else if (tc > t.t) {
 				t.t = tc;
 				t.tri = tri_elements[i];
 				t.hit_index = i;

@@ -17,16 +17,16 @@ bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const doub
 	// Detect a collision has happened
 	double res1 = (P - P0) * normal;
 	double res2 = ((P - (V * tmax)) - P0) * normal;
-	if ((res1 * res2) > 0)
+	if ((res1 * res2) >= 0)
 		return false;
 
 	// Compute where and when collision takes place
 	t = (normal * (P - P0)) / (normal * V);
 	Vector xc = P - (V * t);
 
-	// not a collision
+	// not a collision -- ?
 	if (tmax == 0)
-		//return false;
+	// return false;
 	if ((t * tmax < 0) || (((tmax - t) / tmax) < 1e-6))
 		return false;
 
