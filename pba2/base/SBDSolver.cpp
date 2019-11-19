@@ -11,6 +11,9 @@ void pba::AdvanceSoftBodyPosition::solve(const double dt)
 
 void pba::AdvanceSoftBodyVelocity::solve(const double dt)
 {
+	for (size_t i = 0; i < PQ->nb(); i++)
+		PQ->set_accel(i, Vector(0.0, 0.0, 0.0));
+
 	force->compute(PQ, dt);
 
 	for (size_t i = 0; i < PQ->nb(); i++)

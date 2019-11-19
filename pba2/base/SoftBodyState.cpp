@@ -49,6 +49,9 @@ pba::SoftBodyState pba::GeneratePlanarSoftBody(const Vector& llc, const Vector& 
 	double dx = (urc.X() - llc.X()) / nx;
 	double dz = (urc.Z() - llc.Z()) / nz;
 
+	double edge_threshold = (dx + dz) * 0.5;
+	sb->set_edge_threshold(edge_threshold);
+
 	for (int i = 0; i <= nz; i++) {
 		for (int j = 0; j <= nx; j++){
 			vert = Vector(llc.X() + dx * i, llc.Y(), llc.Z() + dz * j);
@@ -88,7 +91,7 @@ pba::SoftBodyState pba::GeneratePlanarSoftBody(const Vector& llc, const Vector& 
 		}
 	}
 
-	// CreateBlend
+	// CreateBend
 	for (int i = 0; i <= nz; ++i){ // z
 		for (int j = 0; j <= nx; ++j) { // x
 			size_t id = j + i * (nx + 1);

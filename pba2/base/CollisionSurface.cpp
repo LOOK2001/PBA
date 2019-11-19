@@ -46,7 +46,7 @@ bool pba::CollisionSurfaceRaw::hit(const Vector& P, const Vector& V, const doubl
 	return t.status;
 }
 
-bool pba::CollisionSurfaceRaw::hit(const RigidBodyState& s, const size_t _i, const double tmax, CollisionData& t) const
+bool pba::CollisionSurfaceRaw::hit(const SoftBodyState& s, const size_t i, const double tmax, CollisionData& t) const
 {
 	double tc = tmax;
 	t.status = false;
@@ -55,7 +55,36 @@ bool pba::CollisionSurfaceRaw::hit(const RigidBodyState& s, const size_t _i, con
 	// find all triangles that intersect
 	for (int j = 0; j < tri_elements.size(); j++)
 	{
-		if (tri_elements[j]->hit(s, _i, tmax, tc))
+		if (tri_elements[j]->hit(s, i, tmax, tc))
+		{
+			// find the largest backwards T (tc)
+			if (isFirst) {
+				t.t = tc;
+				t.tri = tri_elements[j];
+				t.status = true;
+				isFirst = false;
+			}
+			else if (tc > t.t) {
+				t.t = tc;
+				t.tri = tri_elements[j];
+				t.status = true;
+			}
+		}
+	}
+
+	return t.status;
+}
+
+bool pba::CollisionSurfaceRaw::hit(const RigidBodyState& s, const size_t i, const double tmax, CollisionData& t) const
+{
+	double tc = tmax;
+	t.status = false;
+	bool isFirst = true;
+
+	// find all triangles that intersect
+	for (int j = 0; j < tri_elements.size(); j++)
+	{
+		if (tri_elements[j]->hit(s, i, tmax, tc))
 		{
 			// find the largest backwards T (tc)
 			if (isFirst) {

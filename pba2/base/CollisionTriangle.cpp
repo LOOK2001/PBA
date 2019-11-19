@@ -17,7 +17,9 @@ bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const doub
 	// Detect a collision has happened
 	double res1 = (P - P0) * normal;
 	double res2 = ((P - (V * tmax)) - P0) * normal;
-	if ((res1 * res2) >= 0)
+	if (res1 == 0.0)
+		return false;
+	if ((res1 * res2) > 0)
 		return false;
 
 	// Compute where and when collision takes place
@@ -26,6 +28,30 @@ bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const doub
 
 	// not a collision -- ?
 	if (tmax == 0)
+	// return false;
+	if ((t * tmax < 0) || (((tmax - t) / tmax) < 1e-6))
+		return false;
+
+	return is_in_triangle(xc);
+}
+
+bool pba::CollisionTriangleRaw::hit(const SoftBodyState& s, const size_t i, const double tmax, double& t)
+{
+	const Vector& P = s->pos(i);
+	const Vector& V = s->vel(i);
+
+	// Detect a collision has happened
+	double res1 = (P - P0) * normal;
+	double res2 = ((P - (V * tmax)) - P0) * normal;
+	if (res1 == 0.0)
+		return false;
+	if ((res1 * res2) > 0)
+		return false;
+
+	// Compute where and when collision takes place
+	t = (normal * (P - P0)) / (normal * V);
+	Vector xc = P - (V * t);
+
 	// return false;
 	if ((t * tmax < 0) || (((tmax - t) / tmax) < 1e-6))
 		return false;

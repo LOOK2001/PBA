@@ -194,13 +194,17 @@ void pba::AccumulatingStrutForce::compute(pba::SoftBodyState& pq, const double d
 		const Vector& a = pq->pos(p1);
 		const Vector& b = pq->pos(p2);
 
-		Vector FSab = -spring * (a - b).unitvector() * ((a - b).magnitude() - edge->get_edge_length());
+		Vector dir_ab = (a - b).unitvector();
+		Vector FSab = -spring * dir_ab * ((a - b).magnitude() - edge->get_edge_length());
 		Vector vel_ab = pq->vel(p1) - pq->vel(p2);
-		Vector FFab = -friction * (a - b).unitvector() * ((a - b).unitvector() * vel_ab);
+		Vector FFab = -friction * dir_ab * ((a - b).unitvector() * vel_ab);
 
 		Vector Ftotal = FSab + FFab;
 		Vector aa = (Ftotal + pq->accel(p1) * pq->mass(p1)) / pq->mass(p1);
 		Vector ab = (pq->accel(p2) * pq->mass(p2) - Ftotal) / pq->mass(p2);
+
+// 		if ((a - b).magnitude() > pq->get_edge_threshold())
+// 			return;
 
 		pq->set_accel(p1, aa);
 		pq->set_accel(p2, ab);

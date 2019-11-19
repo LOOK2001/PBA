@@ -16,10 +16,21 @@
 #include <vector>
 #include <String>
 
-#define AS_06
-//#define AS_05
+#define AS_05
 //#define AS_04
+//#define AS_03
 
+// 				const pba::SoftBendable& tri = state->get_bendable(i);
+// 				const pba::Vector& v1 = state->pos(tri->get_first_node());
+// 				glVertex3f(v1.X(), v1.Y(), v1.Z());
+// 				const pba::Vector& v2 = state->pos(tri->get_second_node());
+// 				glVertex3f(v2.X(), v2.Y(), v2.Z());
+// 				const pba::Vector& v3 = state->pos(tri->get_third_node());
+// 				glVertex3f(v3.X(), v3.Y(), v3.Z());
+// 				const pba::Vector& v4 = state->pos(tri->get_fourth_node());
+// 				glVertex3f(v4.X(), v4.Y(), v4.Z());
+
+#ifdef AS_05
 int main(int argc, char* argv[]) {
 	using namespace pba;
 
@@ -45,8 +56,9 @@ int main(int argc, char* argv[]) {
 
 	return 1;
 }
+#endif // AS_05
 
-#ifdef AS_05
+#ifdef AS_04
 int main(int argc, char* argv[]) {
 	using namespace pba;
 
@@ -81,10 +93,10 @@ int main(int argc, char* argv[]) {
 
 	return 1;
 }
-#endif // AS_05
+#endif // AS_04
 
-#ifdef AS_04
-int main(int argc, char* argv[]) 
+#ifdef AS_03
+int main(int argc, char* argv[])
 {
 	using namespace pba;
 	PbaViewer* viewer = PbaViewer::Instance();
@@ -119,4 +131,4 @@ int main(int argc, char* argv[])
 
 	return 1;
 }
-#endif // AS_04
+#endif // AS_03

@@ -4,6 +4,7 @@
 #include "Vector.h"
 #include "Color.h"
 #include "RigidBodyState.h"
+#include "SoftBodyState.h"
 #include "AABB.h"
 #include <memory>
 
@@ -18,7 +19,7 @@ namespace pba {
 
 		bool hit(const RigidBodyState& s, const size_t i, const double tmax, double& t);
 
-		//bool hit(const SoftBodyState& s, const size_t i, const double tmax, double& t);
+		bool hit(const SoftBodyState& s, const size_t i, const double tmax, double& t);
 
 		bool hit(const Vector& P, const Vector& V, const double R, const double tmax, double& t);
 

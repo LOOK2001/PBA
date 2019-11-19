@@ -3,6 +3,7 @@
 
 #include "CollisionTriangle.h"
 #include "RigidBodyState.h"
+#include "SoftBodyState.h"
 
 #include <vector>
 #include <memory>
@@ -34,7 +35,9 @@ namespace pba {
 
 		bool hit(const RigidBodyState& s, const size_t i, const double tmax, CollisionData& t) const;
 
-		bool hit(const Vector& P, const Vector& V, const double R, const double tmax, CollisionData& t) const;
+		bool hit(const SoftBodyState& s, const size_t i, const double tmax, CollisionData& t) const;
+
+		//bool hit(const Vector& P, const Vector& V, const double R, const double tmax, CollisionData& t) const;
 
 		CollisionTriangle& get_triangle(size_t i) { return tri_elements[i]; }
 		const CollisionTriangle& get_triangle(size_t i) const { return tri_elements[i]; }

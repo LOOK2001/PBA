@@ -36,7 +36,11 @@ namespace pba
 			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, RigidBodyStateData>(s);
 			compute(ss, dt);
 		}
-		//void compute(SoftBodyState& s, const double dt);
+		void compute(SoftBodyState& s, const double dt)
+		{
+			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, SoftBodyStateData>(s);
+			compute(ss, dt);
+		}
 		void compute(SPHState& s, const double dt)
 		{
 			DynamicalState ss = std::dynamic_pointer_cast<DynamicalStateData, SPHStateData>(s);

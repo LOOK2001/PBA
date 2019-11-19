@@ -80,6 +80,8 @@ void pba::ElasticCollisionHandler::handle_collisions(const double dt, DynamicalS
 
 				// set reflective velocity
 				S->set_vel(i, vr);
+
+				CD.tri->set_hit_color(Color(1.0, 1.0, 1.0, 1.0));
 			}
 		}
 	}
@@ -200,7 +202,7 @@ void pba::ElasticSBDCollisionHandler::handle_collisions(const double dt, SoftBod
 				Vector norm = CD.tri->N();
 				vn = norm * S->vel(i);
 				vp = S->vel(i) - norm * vn;
-				vr = (coeff_of_restitution * vp) - (0.1 * norm * vn);
+				vr = (coeff_of_restitution * vp) /*- (0.3 * norm * vn)*/;
 
 				// set new point
 				Vector xc = S->pos(i) - (S->vel(i) * CD.t);
@@ -209,6 +211,8 @@ void pba::ElasticSBDCollisionHandler::handle_collisions(const double dt, SoftBod
 
 				// set reflective velocity
 				S->set_vel(i, vr);
+
+				//CD.tri->set_hit_color(Color(1.0, 1.0, 1.0, 1.0));
 			}
 		}
 	}
