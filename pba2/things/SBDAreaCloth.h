@@ -44,8 +44,6 @@ namespace pba {
 			std::cout << "Constructing" << fs << std::endl;
 			state = CreateSoftBody(name + "SoftBodyData");
 
-			AddStateGeometry(pba::Vector(-2, 3.0, -2), pba::Vector(2, 3.0, 2), 50, 50);
-
 			force = CreateAccumulatingForce();
 			gforce = CreateAccumulatingGravityForce(pba::Vector(0, -2.0, 0));
 			//CreateAccumulatingStrutForce(14000.0, 1.0);
@@ -77,8 +75,15 @@ namespace pba {
 			CollisionSurface ground = pba::GenerateCollisionCube(size * 10.0, Vector(0.0, -size * 10.0 - size, 0.0));
 			CollisionSurface box;
 
-			for (auto arg : args)
+			pba::maxforce = 1e+3;
+			nx = nz = 50;
+			box = pba::GenerateCollisionCube(size);
+			combineCollisionSurface(box, ground);
+
+			for (size_t ii = 0; ii < args.size(); ii++)
 			{
+				auto arg = args[ii];
+
 				if (arg == "sphere"){
 					ObjParser* objReader = new ObjParser();
 					objReader->ParseFile("C:/Xicheng/MyLife/College/Code/PBA/pba2/pba2/common/Sphere.obj");
@@ -89,8 +94,19 @@ namespace pba {
 				else if (arg == "cube") {
 					box = pba::GenerateCollisionCube(size);
 					combineCollisionSurface(box, ground);
-				}		
+				}
+				else if (arg == "-d") {
+					ii++;
+					nx = stod(args[ii]);
+					ii++;
+					nz = stod(args[ii]);
+				}
+				else if (arg == "-t") {
+					ii++;
+					pba::maxforce = stod(args[ii]);
+				}
 			}
+			AddStateGeometry(pba::Vector(-2, 3.0, -2), pba::Vector(2, 3.0, 2), nx, nz);
 			AddCollisionSurface(box);
 
 			assert(box);
@@ -135,6 +151,7 @@ namespace pba {
 
 		void Reset()
 		{
+			state->clear();
 			state->clear_pairs();
 			state->add(home_state->nb());
 
@@ -325,6 +342,8 @@ namespace pba {
 		pba::Vector initial_position;
 
 		bool track_sbd;
+
+		int nx, nz;
 	};
 
 	pba::PbaThing SBDAreaCloth(const std::string& f) { return PbaThing(new SBDAreaClothThing(f)); }

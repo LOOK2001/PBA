@@ -199,6 +199,9 @@ void pba::AccumulatingStrutForce::compute(pba::SoftBodyState& pq, const double d
 		Vector vel_ab = pq->vel(p1) - pq->vel(p2);
 		Vector FFab = -friction * dir_ab * ((a - b).unitvector() * vel_ab);
 
+		if (FFab.magnitude() > maxforce)
+			FFab = Vector(0);
+
 		Vector Ftotal = FSab + FFab;
 		Vector aa = (Ftotal + pq->accel(p1) * pq->mass(p1)) / pq->mass(p1);
 		Vector ab = (pq->accel(p2) * pq->mass(p2) - Ftotal) / pq->mass(p2);
@@ -242,6 +245,13 @@ void pba::AccumulatingStrutAreaForce::compute(pba::SoftBodyState& pq, const doub
 		Vector f0 = -spring * d0 * (A - A0) - friction * d0 * (d0 * V0);
 		Vector f1 = -spring * d1 * (A - A0) - friction * d1 * (d1 * V1);
 		Vector f2 = -spring * d2 * (A - A0) - friction * d2 * (d2 * V2);
+
+		if (f0.magnitude() > maxforce)
+			f0 = Vector(0);
+		if (f1.magnitude() > maxforce)
+			f1 = Vector(0);
+		if (f2.magnitude() > maxforce)
+			f2 = Vector(0);
 
 		f0 += (pq->accel(i) * pq->mass(i));
 		f1 += (pq->accel(j) * pq->mass(j));
@@ -305,6 +315,15 @@ void pba::AccumulatingStrutBendForce::compute(pba::SoftBodyState& pq, const doub
 
 		Vector F1 = q0 * F0 + q3 * F3;
 		Vector F2 = -(q0 + 1) * F0 - (q3 + 1) * F3;
+
+		if (F0.magnitude() > maxforce)
+			F0 = Vector(0);
+		if (F1.magnitude() > maxforce)
+			F1 = Vector(0);
+		if (F2.magnitude() > maxforce)
+			F2 = Vector(0);
+		if (F3.magnitude() > maxforce)
+			F3 = Vector(0);
 
 		// recalculate force on i, j, k and j
 		F0 += (pq->accel(i) * pq->mass(i));

@@ -118,6 +118,7 @@ class DynamicalStateData
     bool attr_exists( const std::string& nam ) const;
 
     void merge( const DynamicalStateData& g );
+	void clear();
 
     const std::string& Name() const { return name; }
 

@@ -415,6 +415,25 @@ void DynamicalStateData::re_find_main_attrs()
    }
 }
 
+void pba::DynamicalStateData::clear()
+{
+	for (std::map< std::string, DSAttribute<int> >::iterator a = int_attributes.begin(); a != int_attributes.end(); a++)
+	{
+		a->second.clear();
+	}
+	for (std::map< std::string, DSAttribute<float> >::iterator a = float_attributes.begin(); a != float_attributes.end(); a++)
+	{
+		a->second.clear();
+	}
+	for (std::map< std::string, DSAttribute<Vector> >::iterator a = vector_attributes.begin(); a != vector_attributes.end(); a++)
+	{
+		a->second.clear();
+	}
+	for (std::map< std::string, DSAttribute<Color> >::iterator a = color_attributes.begin(); a != color_attributes.end(); a++)
+	{
+		a->second.clear();
+	}
+}
 
 pba::DynamicalState pba::CreateDynamicalState( const std::string& nam )
 {
