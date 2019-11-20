@@ -8,7 +8,6 @@
 #include "things/SphInATeapot.h"
 #include "things/BouncingRBD.h"
 #include "things/SBDAreaCloth.h"
-#include "common/ObjParser.h"
 
 #define GLUT_DISABLE_ATEXIT_HACK
 #include <GL/glut.h>
@@ -26,17 +25,9 @@ int main(int argc, char* argv[]) {
 
 	PbaViewer* viewer = PbaViewer::Instance();
 
-	double size = 0.5;
-	CollisionSurface cube = pba::GenerateCollisionCube(size);
-	CollisionSurface ground = pba::GenerateCollisionCube(size * 10.0, Vector(0.0, -size * 10.0 - size, 0.0));
-	combineCollisionSurface(cube, ground);
+	PbaThing SBD = SBDAreaCloth("Cloth");
 
-	SBDAreaClothThing* BouncingBalls = new SBDAreaClothThing("Cloth");
-	BouncingBalls->AddCollisionSurface(cube);
-
-	PbaThing balls = PbaThing(BouncingBalls);
-
-	viewer->AddThing(balls);
+	viewer->AddThing(SBD);
 	std::vector<string> vec;
 	for (int i = 0; i < argc; i++) {
 		vec.push_back(argv[i]);

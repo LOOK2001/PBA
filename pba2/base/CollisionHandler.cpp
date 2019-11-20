@@ -202,7 +202,7 @@ void pba::ElasticSBDCollisionHandler::handle_collisions(const double dt, SoftBod
 				Vector norm = CD.tri->N();
 				vn = norm * S->vel(i);
 				vp = S->vel(i) - norm * vn;
-				vr = (coeff_of_restitution * vp) /*- (0.3 * norm * vn)*/;
+				vr = (coeff_of_restitution * vp) - (0.1 * norm * vn);
 
 				// set new point
 				Vector xc = S->pos(i) - (S->vel(i) * CD.t);

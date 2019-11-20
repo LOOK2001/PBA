@@ -9,7 +9,7 @@
 #include "CollisionHandler.h"
 #include "PbaUtils.h"
 #include "LinearAlgebra.h"
-//#include "ObjParser.h"
+#include "common/ObjParser.h"
 #include "PbaViewer.h"
 
 #include <cstdlib>
@@ -47,7 +47,7 @@ namespace pba {
 			AddStateGeometry(pba::Vector(-2, 3.0, -2), pba::Vector(2, 3.0, 2), 50, 50);
 
 			force = CreateAccumulatingForce();
-			gforce = CreateAccumulatingGravityForce(pba::Vector(0, -1.0, 0));
+			gforce = CreateAccumulatingGravityForce(pba::Vector(0, -2.0, 0));
 			//CreateAccumulatingStrutForce(14000.0, 1.0);
 			//CreateAccumulatingStrutAreaForce(15000.0, 26.0);
  			strutforce = CreateAccumulatingStrutForce(14000.0, 1.0);
@@ -72,6 +72,29 @@ namespace pba {
 		void Init(const std::vector<std::string>& args)
 		{
 			std::cout << "Init " << name << std::endl;
+
+			double size = 0.5;
+			CollisionSurface ground = pba::GenerateCollisionCube(size * 10.0, Vector(0.0, -size * 10.0 - size, 0.0));
+			CollisionSurface box;
+
+			for (auto arg : args)
+			{
+				if (arg == "sphere"){
+					ObjParser* objReader = new ObjParser();
+					objReader->ParseFile("C:/Xicheng/MyLife/College/Code/PBA/pba2/pba2/common/Sphere.obj");
+					box = makeCollisionSurface();
+					objReader->Fill(box);
+					combineCollisionSurface(box, ground);
+				}
+				else if (arg == "cube") {
+					box = pba::GenerateCollisionCube(size);
+					combineCollisionSurface(box, ground);
+				}		
+			}
+			AddCollisionSurface(box);
+
+			assert(box);
+
 			toggleAnimate();
 		}
 

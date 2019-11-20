@@ -20,11 +20,10 @@ void pba::AddCollisionSurface(CollisionSurface& s, PbaThing& p)
 
 void pba::Display(CollisionSurface& s)
 {
-	
 	if (s->use_wireframe())
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	
 	glBegin(GL_TRIANGLES);
