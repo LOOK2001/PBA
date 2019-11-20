@@ -20,23 +20,16 @@
 //#define AS_04
 //#define AS_03
 
-// 				const pba::SoftBendable& tri = state->get_bendable(i);
-// 				const pba::Vector& v1 = state->pos(tri->get_first_node());
-// 				glVertex3f(v1.X(), v1.Y(), v1.Z());
-// 				const pba::Vector& v2 = state->pos(tri->get_second_node());
-// 				glVertex3f(v2.X(), v2.Y(), v2.Z());
-// 				const pba::Vector& v3 = state->pos(tri->get_third_node());
-// 				glVertex3f(v3.X(), v3.Y(), v3.Z());
-// 				const pba::Vector& v4 = state->pos(tri->get_fourth_node());
-// 				glVertex3f(v4.X(), v4.Y(), v4.Z());
-
 #ifdef AS_05
 int main(int argc, char* argv[]) {
 	using namespace pba;
 
 	PbaViewer* viewer = PbaViewer::Instance();
 
-	CollisionSurface cube = pba::GenerateCollisionCube(1.0);
+	double size = 0.5;
+	CollisionSurface cube = pba::GenerateCollisionCube(size);
+	CollisionSurface ground = pba::GenerateCollisionCube(size * 10.0, Vector(0.0, -size * 10.0 - size, 0.0));
+	combineCollisionSurface(cube, ground);
 
 	SBDAreaClothThing* BouncingBalls = new SBDAreaClothThing("Cloth");
 	BouncingBalls->AddCollisionSurface(cube);

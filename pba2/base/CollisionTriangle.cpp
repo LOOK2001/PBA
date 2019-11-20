@@ -26,8 +26,6 @@ bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const doub
 	t = (normal * (P - P0)) / (normal * V);
 	Vector xc = P - (V * t);
 
-	// not a collision -- ?
-	if (tmax == 0)
 	// return false;
 	if ((t * tmax < 0) || (((tmax - t) / tmax) < 1e-6))
 		return false;

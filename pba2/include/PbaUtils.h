@@ -15,7 +15,7 @@ namespace pba {
 
 	void Display(pba::CollisionSurface& s);
 
-	pba::CollisionSurface GenerateCollisionCube(double coeff);
+	pba::CollisionSurface GenerateCollisionCube(double coeff, const Vector& trans = Vector(0.0));
 
 	void combineCollisionSurface(pba::CollisionSurface& tar, pba::CollisionSurface& s2);
 

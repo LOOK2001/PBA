@@ -92,17 +92,17 @@ namespace pba {
 			}
 			glEnd();
 
-			glPointSize(5.0);
-			glBegin(GL_POINTS);
-			for (size_t i = 0; i < state->nb(); i++)
-			{
-				const Color& ci = state->ci(i);
-				const pba::Vector& v = state->pos(i);
-
-				glColor4f(ci.red(), ci.green(), ci.blue(), 1.0f);
-				glVertex3f(v.X(), v.Y(), v.Z());
-			}
-			glEnd();
+// 			glPointSize(5.0);
+// 			glBegin(GL_POINTS);
+// 			for (size_t i = 0; i < state->nb(); i++)
+// 			{
+// 				const Color& ci = state->ci(i);
+// 				const pba::Vector& v = state->pos(i);
+// 
+// 				glColor4f(ci.red(), ci.green(), ci.blue(), 1.0f);
+// 				glVertex3f(v.X(), v.Y(), v.Z());
+// 			}
+// 			glEnd();
 		}
 
 		void solve()

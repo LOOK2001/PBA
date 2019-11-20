@@ -83,7 +83,7 @@ void pba::Display(CollisionSurface& s)
 	return;
 }
 
-pba::CollisionSurface pba::GenerateCollisionCube(double size)
+pba::CollisionSurface pba::GenerateCollisionCube(double size, const Vector& trans /*= Vector(0.0)*/)
 {
 	// vertices
 	pba::Vector verts[8];
@@ -94,14 +94,14 @@ pba::CollisionSurface pba::GenerateCollisionCube(double size)
 	// face colors
 	pba::Color face_colors[6];
 
-	verts[0] = pba::Vector(-1 * size, -1 * size, -1 * size);
-	verts[1] = pba::Vector(1 * size, -1 * size, -1 * size);
-	verts[2] = pba::Vector(1 * size, 1 * size, -1 * size);
-	verts[3] = pba::Vector(-1 * size, 1 * size, -1 * size);
-	verts[4] = pba::Vector(-1 * size, -1 * size, 1 * size);
-	verts[5] = pba::Vector(1 * size, -1 * size, 1 * size);
-	verts[6] = pba::Vector(1 * size, 1 * size, 1 * size);
-	verts[7] = pba::Vector(-1 * size, 1 * size, 1 * size);
+	verts[0] = pba::Vector(-1 * size, -1 * size, -1 * size) + trans;
+	verts[1] = pba::Vector(1 * size, -1 * size, -1 * size) + trans;
+	verts[2] = pba::Vector(1 * size, 1 * size, -1 * size) + trans;
+	verts[3] = pba::Vector(-1 * size, 1 * size, -1 * size) + trans;
+	verts[4] = pba::Vector(-1 * size, -1 * size, 1 * size) + trans;
+	verts[5] = pba::Vector(1 * size, -1 * size, 1 * size) + trans;
+	verts[6] = pba::Vector(1 * size, 1 * size, 1 * size) + trans;
+	verts[7] = pba::Vector(-1 * size, 1 * size, 1 * size) + trans;
 
 	face_colors[0] = pba::Color(1, 0, 1, 1);
 	face_colors[1] = pba::Color(1, 0, 0, 1);
