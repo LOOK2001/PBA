@@ -48,8 +48,8 @@ namespace pba {
 			gforce = CreateAccumulatingGravityForce(pba::Vector(0, -2.0, 0));
 			//CreateAccumulatingStrutForce(14000.0, 1.0);
 			//CreateAccumulatingStrutAreaForce(15000.0, 26.0);
- 			strutforce = CreateAccumulatingStrutForce(14000.0, 1.0);
- 			strutareaforce = CreateAccumulatingStrutAreaForce(15000.0, 26.0);
+ 			strutforce = CreateAccumulatingStrutForce(1400.0, 1.0);
+ 			strutareaforce = CreateAccumulatingStrutAreaForce(1500.0, 26.0);
 			strutbendforce = CreateAccumulatingStrutBendForce(15.0, 30.0);
 			std::shared_ptr<AccumulatingForce> f = dynamic_pointer_cast<AccumulatingForce>(force);
 			f->add(strutforce);
@@ -58,6 +58,7 @@ namespace pba {
 			f->add(gforce);
 			std::cout << "Forces constructed\n";
 
+			collisions.set_CR(0.995);
 			GISolver solvera = CreateAdvanceRotation(state, collisions);
 			GISolver solverb = CreateAdvanceAngularVelocity(state, force);
 			basicsolver = CreateLeapFrogSolver(solvera, solverb);
@@ -75,7 +76,6 @@ namespace pba {
 			CollisionSurface ground = pba::GenerateCollisionCube(size * 10.0, Vector(0.0, -size * 10.0 - size, 0.0));
 			CollisionSurface box;
 
-			pba::maxforce = 1e+3;
 			nx = nz = 50;
 			box = pba::GenerateCollisionCube(size);
 			combineCollisionSurface(box, ground);
@@ -101,10 +101,6 @@ namespace pba {
 					ii++;
 					nz = stod(args[ii]);
 				}
-				else if (arg == "-t") {
-					ii++;
-					pba::maxforce = stod(args[ii]);
-				}
 			}
 			AddStateGeometry(pba::Vector(-2, 3.0, -2), pba::Vector(2, 3.0, 2), nx, nz);
 			AddCollisionSurface(box);
@@ -119,6 +115,7 @@ namespace pba {
 			pba::Display(box);
 
 			glBegin(GL_LINES);
+			glLineWidth(10.0f);
 			const Color ci(1.0, 1.0, 1.0, 1.0);
 			glColor3f(ci.red(), ci.green(), ci.blue());
 			for (size_t i = 0; i < state->nb_pairs(); i++)
@@ -130,18 +127,6 @@ namespace pba {
 				glVertex3f(v2.X(), v2.Y(), v2.Z());
 			}
 			glEnd();
-
-// 			glPointSize(5.0);
-// 			glBegin(GL_POINTS);
-// 			for (size_t i = 0; i < state->nb(); i++)
-// 			{
-// 				const Color& ci = state->ci(i);
-// 				const pba::Vector& v = state->pos(i);
-// 
-// 				glColor4f(ci.red(), ci.green(), ci.blue(), 1.0f);
-// 				glVertex3f(v.X(), v.Y(), v.Z());
-// 			}
-// 			glEnd();
 		}
 
 		void solve()

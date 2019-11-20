@@ -195,14 +195,11 @@ void pba::AccumulatingStrutForce::compute(pba::SoftBodyState& pq, const double d
 		const Vector& b = pq->pos(p2);
 
 		Vector dir_ab = (a - b).unitvector();
-		Vector FSab = -spring * dir_ab * ((a - b).magnitude() - edge->get_edge_length());
+		Vector fs = -spring * dir_ab * ((a - b).magnitude() - edge->get_edge_length());
 		Vector vel_ab = pq->vel(p1) - pq->vel(p2);
-		Vector FFab = -friction * dir_ab * ((a - b).unitvector() * vel_ab);
+		Vector ff = -friction * dir_ab * ((a - b).unitvector() * vel_ab);
 
-		if (FFab.magnitude() > maxforce)
-			FFab = Vector(0);
-
-		Vector Ftotal = FSab + FFab;
+		Vector Ftotal = fs + ff;
 		Vector aa = (Ftotal + pq->accel(p1) * pq->mass(p1)) / pq->mass(p1);
 		Vector ab = (pq->accel(p2) * pq->mass(p2) - Ftotal) / pq->mass(p2);
 
@@ -246,13 +243,6 @@ void pba::AccumulatingStrutAreaForce::compute(pba::SoftBodyState& pq, const doub
 		Vector f1 = -spring * d1 * (A - A0) - friction * d1 * (d1 * V1);
 		Vector f2 = -spring * d2 * (A - A0) - friction * d2 * (d2 * V2);
 
-		if (f0.magnitude() > maxforce)
-			f0 = Vector(0);
-		if (f1.magnitude() > maxforce)
-			f1 = Vector(0);
-		if (f2.magnitude() > maxforce)
-			f2 = Vector(0);
-
 		f0 += (pq->accel(i) * pq->mass(i));
 		f1 += (pq->accel(j) * pq->mass(j));
 		f2 += (pq->accel(k) * pq->mass(k));
@@ -282,11 +272,11 @@ void pba::AccumulatingStrutBendForce::compute(pba::SoftBodyState& pq, const doub
 
 		Vector e1 = pq->pos(j) - pq->pos(i);
 		Vector e2 = pq->pos(k) - pq->pos(i);
-		Vector n0 = (e1 ^ e2).magnitude();
+		Vector n0 = (e1 ^ e2).unitvector();
 		Vector f1 = pq->pos(j) - pq->pos(l);
 		Vector f2 = pq->pos(k) - pq->pos(l);
-		Vector n1 = (f2 - f1).magnitude();
-		Vector h = (pq->pos(k) - pq->pos(j)).magnitude();
+		Vector n1 = (f2 ^ f1).unitvector();
+		Vector h = (pq->pos(k) - pq->pos(j)).unitvector();
 
 		double sint = h * (n0 ^ n1);
 		double cost = n1 * n0;
@@ -315,15 +305,6 @@ void pba::AccumulatingStrutBendForce::compute(pba::SoftBodyState& pq, const doub
 
 		Vector F1 = q0 * F0 + q3 * F3;
 		Vector F2 = -(q0 + 1) * F0 - (q3 + 1) * F3;
-
-		if (F0.magnitude() > maxforce)
-			F0 = Vector(0);
-		if (F1.magnitude() > maxforce)
-			F1 = Vector(0);
-		if (F2.magnitude() > maxforce)
-			F2 = Vector(0);
-		if (F3.magnitude() > maxforce)
-			F3 = Vector(0);
 
 		// recalculate force on i, j, k and j
 		F0 += (pq->accel(i) * pq->mass(i));

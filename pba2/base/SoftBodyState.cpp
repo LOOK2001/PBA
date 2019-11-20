@@ -18,13 +18,19 @@ void pba::SoftBodyStateData::add_triangle(size_t i, size_t j, size_t k)
 
 void pba::SoftBodyStateData::add_bend(size_t i, size_t j, size_t k, size_t l)
 {
+	//  i-------k
+	//  |    /  |
+	//  | 	/   |
+	//  |  /    |
+	//  j-------l
+
 	Vector e1 = pos(j) - pos(i);
 	Vector e2 = pos(k) - pos(i);
-	Vector n0 = (e1 ^ e2).magnitude();
+	Vector n0 = (e1 ^ e2).unitvector();
 	Vector f1 = pos(j) - pos(l);
 	Vector f2 = pos(k) - pos(l);
-	Vector n1 = (f2 - f1).magnitude();
-	Vector h = (pos(k) - pos(j)).magnitude();
+	Vector n1 = (f2 ^ f1).unitvector();
+	Vector h = (pos(k) - pos(j)).unitvector();
 
 	double sint = h * (n0 ^ n1);
 	double cost = n1 * n0;
@@ -58,6 +64,13 @@ pba::SoftBodyState pba::GeneratePlanarSoftBody(const Vector& llc, const Vector& 
 			sb->set_pos(j + i * (nx + 1), vert);
 		}
 	}
+
+	// id+nx+1--id+nx+2
+	//  | 	\	   |
+	//  |    \	   |
+	//  |     \    |
+	//  |      \   |
+	// id---------id+1
 
 	// CreateConnectedPairs
 	for (int i = 0; i <= nz; ++i){ // z
@@ -96,6 +109,12 @@ pba::SoftBodyState pba::GeneratePlanarSoftBody(const Vector& llc, const Vector& 
 		for (int j = 0; j <= nx; ++j) { // x
 			size_t id = j + i * (nx + 1);
 			// create bend
+			//  0-------2
+			//  |    /  |
+			//  | 	/   |
+			//  |  /    |
+			//  1-------3
+
 			if (i != nz && j != nx){
 				sb->add_bend(id + nx + 1, id, id + nx + 2, id + 1);
 			}

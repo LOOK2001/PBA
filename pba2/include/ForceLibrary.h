@@ -5,8 +5,6 @@
 
 namespace pba
 {
-	static double maxforce = 1e+3;
-
 	class AccumulatingForce : public ForceBase
 	{
 	public:
