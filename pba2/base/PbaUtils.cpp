@@ -171,6 +171,91 @@ pba::CollisionSurface pba::GenerateCollisionCube(double size, const Vector& tran
 	return surf;
 }
 
+pba::CollisionSurface pba::GenerateCollisionSphere(double coeff, const Vector& trans /*= Vector(0.0)*/)
+{
+	std::vector<pba::Vector> verts;
+	verts.resize(8);
+
+	verts[0] = pba::Vector(-3, -3, -3);
+	verts[1] = pba::Vector(3, -3, -3);
+	verts[2] = pba::Vector(3, 3, -3);
+	verts[3] = pba::Vector(-3, 3, -3);
+	verts[4] = pba::Vector(-3, -3, 3);
+	verts[5] = pba::Vector(3, -3, 3);
+	verts[6] = pba::Vector(3, 3, 3);
+	verts[7] = pba::Vector(-3, 3, 3);
+
+
+
+	pba::Color face_colors[12];
+	face_colors[0] = pba::Color(1, 0, 1, 0);
+	face_colors[1] = pba::Color(1, 0, 0, 0);
+	face_colors[2] = pba::Color(0, 0, 1, 0);
+	face_colors[3] = pba::Color(0, 1, 0, 0);
+	face_colors[4] = pba::Color(1, 1, 0, 0);
+	face_colors[5] = pba::Color(0, 1, 1, 0);
+	face_colors[6] = pba::Color(1, 0.5, 1, 0);
+	face_colors[7] = pba::Color(1, 0.5, 0.5, 0);
+	face_colors[8] = pba::Color(0.5, 0.5, 1, 0);
+	face_colors[9] = pba::Color(0.5, 1, 0.5, 0);
+	face_colors[10] = pba::Color(1, 1, 0.5, 0);
+	face_colors[11] = pba::Color(0.5, 1, 1, 0);
+
+	CollisionSurface box = makeCollisionSurface();
+
+	CollisionTriangle tri = makeCollisionTriangle(verts[0], verts[1], verts[2]);
+	tri->set_color(face_colors[0]);
+	tri->set_invisible();
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[0], verts[2], verts[3]);
+	tri->set_color(face_colors[1]);
+	tri->set_invisible();
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[1], verts[5], verts[6]);
+	tri->set_color(face_colors[2]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[1], verts[6], verts[2]);
+	tri->set_color(face_colors[3]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[1], verts[5], verts[4]);
+	tri->set_color(face_colors[4]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[1], verts[4], verts[0]);
+	tri->set_color(face_colors[5]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[2], verts[6], verts[7]);
+	tri->set_color(face_colors[6]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[2], verts[7], verts[3]);
+	tri->set_color(face_colors[7]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[0], verts[4], verts[7]);
+	tri->set_color(face_colors[8]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[0], verts[7], verts[3]);
+	tri->set_color(face_colors[9]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[5], verts[6], verts[7]);
+	tri->set_color(face_colors[10]);
+	box->addTriangle(tri);
+
+	tri = makeCollisionTriangle(verts[5], verts[7], verts[4]);
+	tri->set_color(face_colors[11]);
+	box->addTriangle(tri);
+
+	return box;
+}
+
 void pba::combineCollisionSurface(CollisionSurface& tar, CollisionSurface& s2)
 {
 	for (int i = 0; i < s2->triangle_size(); i++)

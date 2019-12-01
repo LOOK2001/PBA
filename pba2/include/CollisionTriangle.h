@@ -32,7 +32,7 @@ namespace pba {
 		}
 
 		void set_visible() { visible = true; }
-		void set_invisable() { visible = false; }
+		void set_invisible() { visible = false; }
 		bool visibility() const { return visible; }
 
 		void set_color(const Color& c) { color = c; }

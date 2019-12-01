@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="base\AABB.cpp" />
     <ClCompile Include="base\CollisionHandler.cpp" />
+    <ClCompile Include="base\CollisionSphere.cpp" />
     <ClCompile Include="base\CollisionSurface.cpp" />
     <ClCompile Include="base\CollisionTriangle.cpp" />
     <ClCompile Include="base\Constraint.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="common\ObjParser.h" />
     <ClInclude Include="include\AABB.h" />
     <ClInclude Include="include\CollisionHandler.h" />
+    <ClInclude Include="include\CollisionSphere.h" />
     <ClInclude Include="include\CollisionSurface.h" />
     <ClInclude Include="include\CollisionTriangle.h" />
     <ClInclude Include="include\Color.h" />
@@ -208,6 +210,7 @@
     <ClInclude Include="things\BasicBoid.h" />
     <ClInclude Include="things\BouncingBalls.h" />
     <ClInclude Include="things\BouncingRBD.h" />
+    <ClInclude Include="things\BouncingSpheres.h" />
     <ClInclude Include="things\ParticleOnASphere.h" />
     <ClInclude Include="things\RotatingCube.h" />
     <ClInclude Include="things\SBDAreaCloth.h" />

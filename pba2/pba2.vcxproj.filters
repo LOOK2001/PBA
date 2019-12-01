@@ -107,17 +107,20 @@
     <ClCompile Include="base\TorqueLibrary.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="base\SoftEdge.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="base\SoftBodyState.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="base\CollisionSphere.cpp">
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\Strut.cpp">
-      <Filter>源文件</Filter>
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\SoftEdge.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\SoftBodyState.cpp">
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="base\SBDSolver.cpp">
-      <Filter>源文件</Filter>
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,11 +229,29 @@
     <ClInclude Include="include\TorqueLibrary.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="things\BouncingRBD.h" />
-    <ClInclude Include="include\SoftEdge.h" />
-    <ClInclude Include="include\SoftBodyState.h" />
-    <ClInclude Include="include\Strut.h" />
-    <ClInclude Include="include\SBDSolver.h" />
-    <ClInclude Include="things\SBDAreaCloth.h" />
+    <ClInclude Include="include\Strut.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="things\BouncingRBD.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionSphere.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBDSolver.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SoftBodyState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SoftEdge.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="things\BouncingSpheres.h">
+      <Filter>things</Filter>
+    </ClInclude>
+    <ClInclude Include="things\SBDAreaCloth.h">
+      <Filter>things</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

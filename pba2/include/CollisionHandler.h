@@ -44,6 +44,30 @@ namespace pba
 		void handle_collisions(const double dt, DynamicalState& S);
 	};
 
+	class ElasticSphereCollisionHandler : public CollisionHandler
+	{
+	public:
+		ElasticSphereCollisionHandler() : do_self_collisions(false)
+		{};
+		~ElasticSphereCollisionHandler() {}
+
+		void handle_collisions(const double dt, DynamicalState& s);
+
+		bool do_self_collisions;
+	};
+
+	class ElasticSphereSphereCollisionHandler : public CollisionHandler
+	{
+	public:
+		ElasticSphereSphereCollisionHandler() : do_self_collisions(false)
+		{};
+		~ElasticSphereSphereCollisionHandler() {}
+
+		void handle_collisions(const double dt, DynamicalState& s);
+
+		bool do_self_collisions;
+	};
+
 	class ElasticRBDCollisionHandler :public CollisionHandler
 	{
 	public:

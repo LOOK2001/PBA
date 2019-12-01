@@ -8,6 +8,7 @@
 #include "things/SphInATeapot.h"
 #include "things/BouncingRBD.h"
 #include "things/SBDAreaCloth.h"
+#include "things/BouncingSpheres.h"
 
 #define GLUT_DISABLE_ATEXIT_HACK
 #include <GL/glut.h>
@@ -15,9 +16,33 @@
 #include <vector>
 #include <String>
 
-#define AS_05
+#define SPHERE_COLLISION
+//#define AS_05
 //#define AS_04
 //#define AS_03
+
+#ifdef SPHERE_COLLISION
+int main(int argc, char* argv[]) {
+	using namespace pba;
+
+	PbaViewer* viewer = PbaViewer::Instance();
+
+	PbaThing Sph = BouncingSpheres();
+
+	viewer->AddThing(Sph);
+	std::vector<string> vec;
+	for (int i = 0; i < argc; i++) {
+		vec.push_back(argv[i]);
+	}
+	viewer->Init(vec);
+
+	viewer->MainLoop();
+
+	std::cout << "Hello" << std::endl;
+
+	return 1;
+}
+#endif // SPHERE_COLLISION
 
 #ifdef AS_05
 int main(int argc, char* argv[]) {
@@ -50,8 +75,8 @@ int main(int argc, char* argv[]) {
 
 	CollisionSurface cube = pba::GenerateCollisionCube(2.0);
 	{
-		cube->get_triangle(4)->set_invisable();
-		cube->get_triangle(5)->set_invisable();
+		cube->get_triangle(4)->set_invisible();
+		cube->get_triangle(5)->set_invisible();
 	}
 
 	ObjParser* objReader = new ObjParser();
@@ -87,8 +112,8 @@ int main(int argc, char* argv[])
 
 	CollisionSurface cube = pba::GenerateCollisionCube(2.0);
 	{
-		cube->get_triangle(4)->set_invisable();
-		cube->get_triangle(5)->set_invisable();
+		cube->get_triangle(4)->set_invisible();
+		cube->get_triangle(5)->set_invisible();
 	}
 
 	ObjParser* objReader = new ObjParser();
