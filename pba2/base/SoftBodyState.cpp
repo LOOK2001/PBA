@@ -46,24 +46,44 @@ pba::SoftBodyState pba::CreateSoftBody(const std::string& nam /*= "SoftBodyDataN
 	return SoftBodyState(new SoftBodyStateData(nam));
 }
 
-pba::SoftBodyState pba::GeneratePlanarSoftBody(const Vector& llc, const Vector& urc, int nx, int nz)
+pba::SoftBodyState pba::GeneratePlanarSoftBody(const Vector& llc, const Vector& urc, int nx, int nz, bool horz)
 {
 	SoftBodyState sb = CreateSoftBody();
 
 	sb->add((nx+1) * (nz+1));
 	Vector vert;
-	double dx = (urc.X() - llc.X()) / nx;
-	double dz = (urc.Z() - llc.Z()) / nz;
 
-	double edge_threshold = (dx + dz) * 0.5;
-	sb->set_edge_threshold(edge_threshold);
+	double dx;
+	double dy;
 
-	for (int i = 0; i <= nz; i++) {
-		for (int j = 0; j <= nx; j++){
-			vert = Vector(llc.X() + dx * i, llc.Y(), llc.Z() + dz * j);
-			sb->set_pos(j + i * (nx + 1), vert);
+	if (horz)
+	{
+		dx = (urc.X() - llc.X()) / nx;
+		dy = (urc.Z() - llc.Z()) / nz;
+
+		for (int i = 0; i <= nx; i++) {
+			for (int j = 0; j <= nz; j++) {
+				vert = Vector(llc.X() + dx * i, llc.Y(), llc.Z() + dy * j);
+				sb->set_pos(j + i * (nz + 1), vert);
+			}
 		}
 	}
+	else
+	{
+		dx = (urc.X() - llc.X()) / nx;
+		dy = (urc.Y() - llc.Y()) / nz;
+
+		for (int i = 0; i <= nx; i++) {
+			for (int j = 0; j <= nz; j++) {
+				vert = Vector(llc.X() + dx * i, llc.Y() + dy * j, llc.Z());
+				sb->set_pos(j + i * (nz + 1), vert);
+			}
+		}
+	}
+	
+
+	double edge_threshold = (dx + dy) * 0.5;
+	sb->set_edge_threshold(edge_threshold);
 
 	// id+nx+1--id+nx+2
 	//  | 	\	   |
@@ -73,41 +93,41 @@ pba::SoftBodyState pba::GeneratePlanarSoftBody(const Vector& llc, const Vector& 
 	// id---------id+1
 
 	// CreateConnectedPairs
-	for (int i = 0; i <= nz; ++i){ // z
-		for (int j = 0; j <= nx; ++j){ // x
-			size_t id = j + i * (nx + 1);
+	for (int i = 0; i <= nx; ++i) { // z
+		for (int j = 0; j <= nz; ++j) { // x
+			size_t id = j + i * (nz + 1);
 			// create connected pairs
 			// add horizontal and vertical pairs
-			if (j != nx)
+			if (j != nz)
 				sb->add_pair(id, id + 1);
-			if (i != nz)
-				sb->add_pair(id, id + nx + 1);
+			if (i != nx)
+				sb->add_pair(id, id + nz + 1);
 		}
 	}
 
 	// CreateTriangleAreas
-	for (int i = 0; i <= nz; ++i) { // z
-		for (int j = 0; j <= nx; ++j) { // x
-			size_t id = j + i * (nx + 1);
+	for (int i = 0; i <= nx; ++i) { // z
+		for (int j = 0; j <= nz; ++j) { // x
+			size_t id = j + i * (nz + 1);
 			// create triangle areas
-			if (i != nz && j != nx)
+			if (i != nx && j != nz)
 			{
 				// left upper
-				sb->add_triangle(id, id + 1, id + nx + 1);
+				sb->add_triangle(id, id + 1, id + nz + 1);
 				// right upper
-				sb->add_triangle(id, id + 1, id + nx + 2);
+				sb->add_triangle(id, id + 1, id + nz + 2);
 				// left lower
-				sb->add_triangle(id, id + nx + 1, id + nx + 2);
+				sb->add_triangle(id, id + nz + 1, id + nz + 2);
 				// right lower
-				sb->add_triangle(id + 1, id + nx + 1, id + nx + 2);
+				sb->add_triangle(id + 1, id + nz + 1, id + nz + 2);
 			}
 		}
 	}
 
 	// CreateBend
-	for (int i = 0; i <= nz; ++i){ // z
-		for (int j = 0; j <= nx; ++j) { // x
-			size_t id = j + i * (nx + 1);
+	for (int i = 0; i <= nx; ++i) { // z
+		for (int j = 0; j <= nz; ++j) { // x
+			size_t id = j + i * (nz + 1);
 			// create bend
 			//  0-------2
 			//  |    /  |
@@ -115,8 +135,8 @@ pba::SoftBodyState pba::GeneratePlanarSoftBody(const Vector& llc, const Vector& 
 			//  |  /    |
 			//  1-------3
 
-			if (i != nz && j != nx){
-				sb->add_bend(id + nx + 1, id, id + nx + 2, id + 1);
+			if (i != nx && j != nz) {
+				sb->add_bend(id + nz + 1, id, id + nz + 2, id + 1);
 			}
 		}
 	}

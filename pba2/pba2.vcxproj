@@ -70,11 +70,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Xicheng\MyLife\College\Code\PBA\include;C:\Xicheng\MyLife\College\Code\PBA\pba2\pba2\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>C:\Xicheng\MyLife\College\Clemson\2019-2020FALL\Physically based animation\HW\OpenGL\include;C:\Xicheng\MyLife\College\Code\PBA\include;C:\Xicheng\MyLife\College\Code\PBA\pba2\pba2\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>C:\Xicheng\MyLife\College\Code\PBA\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Xicheng\MyLife\College\Code\PBA\include;C:\Xicheng\MyLife\College\Code\PBA\pba2\pba2\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>C:\Xicheng\MyLife\College\Clemson\2019-2020FALL\Physically based animation\HW\OpenGL\include;C:\Xicheng\MyLife\College\Code\PBA\include;C:\Xicheng\MyLife\College\Code\PBA\pba2\pba2\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>C:\Xicheng\MyLife\College\Code\PBA\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -173,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\AsciiParser.h" />
+    <ClInclude Include="common\Common.h" />
     <ClInclude Include="common\ObjParser.h" />
     <ClInclude Include="include\AABB.h" />
     <ClInclude Include="include\CollisionHandler.h" />
@@ -209,8 +210,10 @@
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="things\BasicBoid.h" />
     <ClInclude Include="things\BouncingBalls.h" />
+    <ClInclude Include="things\BouncingGame.h" />
     <ClInclude Include="things\BouncingRBD.h" />
     <ClInclude Include="things\BouncingSpheres.h" />
+    <ClInclude Include="things\ClothSphereGame.h" />
     <ClInclude Include="things\ParticleOnASphere.h" />
     <ClInclude Include="things\RotatingCube.h" />
     <ClInclude Include="things\SBDAreaCloth.h" />

@@ -5,6 +5,10 @@
 #include "PbaThing.h"
 
 #include <AABB.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 extern std::vector<pba::AABB> testAABB;
 
 using namespace std;
@@ -16,6 +20,7 @@ namespace pba {
 	void Display(pba::CollisionSurface& s);
 
 	pba::CollisionSurface GenerateCollisionCube(double coeff = 1.0, const Vector& trans = Vector(0.0));
+	pba::CollisionSurface GenerateCollisionPlane(Vector coeff, const Matrix& _rot = unitMatrix(), const Vector& trans = Vector(0.0));
 	pba::CollisionSurface GenerateCollisionSphere(double coeff = 1.0, const Vector& trans = Vector(0.0));
 
 	void combineCollisionSurface(pba::CollisionSurface& tar, pba::CollisionSurface& s2);

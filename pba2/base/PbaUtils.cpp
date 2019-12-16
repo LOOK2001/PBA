@@ -171,6 +171,69 @@ pba::CollisionSurface pba::GenerateCollisionCube(double size, const Vector& tran
 	return surf;
 }
 
+pba::CollisionSurface pba::GenerateCollisionPlane(Vector coeff, const Matrix& _rot, const Vector& trans /*= Vector(0.0)*/)
+{
+	// vertices
+	std::vector<pba::Vector> verts;
+	verts.push_back(Vector(-1, -1, -1));
+	verts.push_back(Vector(1, -1, -1));
+	verts.push_back(Vector(-1, -1, 1));
+	verts.push_back(Vector(1, -1, 1));
+
+	// faces
+	std::vector< std::vector<int> > faces;
+
+	// face colors
+	pba::Color face_colors[6];
+
+	std::vector<glm::vec4> vec;
+	vec.push_back(glm::vec4(-1, -1, -1, 1));
+	vec.push_back(glm::vec4(1, -1, -1, 1));
+	vec.push_back(glm::vec4(-1, -1, 1, 1));
+	vec.push_back(glm::vec4(1, -1, 1, 1));
+
+	for (auto v : verts)
+	{
+		v = v * _rot;
+	}
+
+	for (size_t i = 0; i < verts.size(); i++)
+	{
+		verts[i] = Vector(verts[i].X() * coeff.X(), verts[i].Y() * coeff.Y(), verts[i].Z() * coeff.Z());
+	}
+
+	face_colors[0] = pba::Color(1, 0, 1, 1);
+	face_colors[1] = pba::Color(1, 0, 0, 1);
+	face_colors[2] = pba::Color(0, 0, 1, 1);
+	face_colors[3] = pba::Color(0, 1, 0, 1);
+	face_colors[4] = pba::Color(1, 1, 0, 1);
+	face_colors[5] = pba::Color(0, 1, 1, 1);
+
+	std::vector<int> face;
+	face.push_back(0);
+	face.push_back(1);
+	face.push_back(2);
+	faces.push_back(face);
+
+	face[0] = 2;
+	face[1] = 3;
+	face[2] = 1;
+	faces.push_back(face);
+
+	CollisionSurface surf = makeCollisionSurface();
+
+	for (size_t i = 0; i < faces.size(); i++)
+	{
+		std::vector<int>& face = faces[i];
+
+		CollisionTriangle tri1 = makeCollisionTriangle(verts[face[0]], verts[face[1]], verts[face[2]]);
+		tri1->set_color(face_colors[i % 6]);
+		surf->addTriangle(tri1);
+	}
+
+	return surf;
+}
+
 pba::CollisionSurface pba::GenerateCollisionSphere(double coeff, const Vector& trans /*= Vector(0.0)*/)
 {
 	std::vector<pba::Vector> verts;

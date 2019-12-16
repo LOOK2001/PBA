@@ -1,6 +1,7 @@
 ﻿#include "CollisionTriangle.h"
 
 pba::CollisionTriangleRaw::CollisionTriangleRaw(const Vector& p0, const Vector& p1, const Vector& p2)
+	:collType(WALL)
 {
 	P0 = p0; P1 = p1; P2 = p2;
 	visible = true;
@@ -36,7 +37,7 @@ bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const doub
 bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const double R, const double tmax, double& t)
 {
 	// Detect a collision has happened
-	double res = (P - P0) * normal;
+	double res = abs((P - P0) * normal);
 	if (res >= R)
 		return false;
 
@@ -53,10 +54,47 @@ bool pba::CollisionTriangleRaw::hit(const Vector& P, const Vector& V, const doub
 
 	Vector xc = P - (V * t);
 
-	if (is_in_triangle(xc + R) || is_in_triangle(xc - R))
+	if (is_in_triangle(xc + R * normal) || is_in_triangle(xc - R * normal))
 		return true;
-	else
+	else {
+// 		Vector e[3];
+// 		e[0] = P1 - P0;
+// 		e[1] = P2 - P1;
+// 		e[2] = P2 - P0;
+// 		
+// 		Vector ver[3];
+// 		ver[0] = P0;
+// 		ver[1] = P1;
+// 		ver[2] = P2;
+// 		for (size_t i= 0; i < 3; i++)
+// 		{
+// 			Vector p0 = P0[i];
+// 			Vector edge = e[i];
+// 			Vector vv = V - edge * (edge * V) / pow((edge.magnitude()), 2);
+// 			Vector sv = (P - p0) - (edge * (edge * (P - p0))) / pow((edge.magnitude()), 2);
+// 			double p1 = sqrt(pow((vv * sv), 2) + pow((vv).magnitude(), 2) * (pow((sv).magnitude(), 2) - (R * R))) / (pow((sv).magnitude(), 2));
+// 			double _t = 0;
+// 			double t1 = (-vv * sv) / pow((vv).magnitude(), 2) + p1;
+// 			double t2 = (-vv * sv) / pow((vv).magnitude(), 2) - p1;
+// 
+// 			if ((t1 * tmax) > 0 && (abs(t1) < abs(tmax)))
+// 				_t = t1;
+// 			else if ((t2 * tmax) > 0 && (abs(t2) < abs(tmax)))
+// 				_t = t2;
+// 			else
+// 				continue;
+// 
+// 			double a = edge * (P - V * _t - p0) / (pow(edge.magnitude(), 2));
+// 			if (!(a >= 0 && a <= 1))
+// 				continue;
+// 			if (abs(t) > _t)
+// 			{
+// 				t = _t;
+// 				return true;
+// 			}
+// 		}
 		return false;
+	}
 }
 
 bool pba::CollisionTriangleRaw::hit(const SoftBodyState& s, const size_t i, const double tmax, double& t)

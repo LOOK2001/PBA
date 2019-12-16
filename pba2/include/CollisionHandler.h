@@ -6,6 +6,8 @@
 #include "RigidBodyState.h"
 #include "SoftBodyState.h"
 #include "TraceTree.h"
+#include "../common/Common.h"
+#include "PbaViewer.h"
 #include <iostream>
 
 namespace pba
@@ -14,7 +16,9 @@ namespace pba
 	class CollisionHandler
 	{
 	public:
-		CollisionHandler() {}
+		CollisionHandler() 
+		:tree(nullptr)
+		{}
 		virtual ~CollisionHandler() {
 			if (tree)
 				delete tree;
@@ -90,6 +94,21 @@ namespace pba
 			coeff_of_restitution(1.0)
 		{};
 		~ElasticSBDCollisionHandler() {}
+
+		void handle_collisions(const double dt, SoftBodyState& s);
+		void set_CR(const float v) { coeff_of_restitution = v; }
+
+	private:
+		float coeff_of_restitution;
+	};
+
+	class ElasticSBDSphereCollisionHandler : public ElasticSBDCollisionHandler
+	{
+	public:
+		ElasticSBDSphereCollisionHandler() :
+			coeff_of_restitution(1.0)
+		{};
+		~ElasticSBDSphereCollisionHandler() {}
 
 		void handle_collisions(const double dt, SoftBodyState& s);
 		void set_CR(const float v) { coeff_of_restitution = v; }

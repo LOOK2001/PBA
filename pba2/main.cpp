@@ -9,6 +9,8 @@
 #include "things/BouncingRBD.h"
 #include "things/SBDAreaCloth.h"
 #include "things/BouncingSpheres.h"
+#include "things/BouncingGame.h"
+#include "things/ClothSphereGame.h"
 
 #define GLUT_DISABLE_ATEXIT_HACK
 #include <GL/glut.h>
@@ -27,9 +29,9 @@ int main(int argc, char* argv[]) {
 
 	PbaViewer* viewer = PbaViewer::Instance();
 
-	PbaThing Sph = BouncingSpheres();
+	PbaThing game = ClothSphereGame();
 
-	viewer->AddThing(Sph);
+	viewer->AddThing(game);
 	std::vector<string> vec;
 	for (int i = 0; i < argc; i++) {
 		vec.push_back(argv[i]);

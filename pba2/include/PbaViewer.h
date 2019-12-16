@@ -23,11 +23,22 @@
 
 #include <cstring>
 #include <vector>
+#include "Vector.h"
 #include "PbaThing.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
 
 namespace pba{
+
+	enum Camera_Movement {
+		FORWARD,
+		BACKWARD,
+		LEFT,
+		RIGHT
+	};
 
 
 class PbaViewer
@@ -77,6 +88,7 @@ class PbaViewer
     void Mouse( int button, int state, int x, int y );
     //! Cascading callback for a mouse motion event 
     void Motion( int x, int y );
+	void PassiveMotion(int x, int y);
     //! Cascading callback for a GLUT Special event 
     void Special( int key, int x, int y ){}
     //! Cascading callback for an idle  event 
@@ -91,7 +103,17 @@ class PbaViewer
     void AddThing( pba::PbaThing& t );
 
     //! Cascading callback for usage information
-    void Usage(); 
+    void Usage();
+
+	void sendMessage(unsigned int _messgae);
+	Vector getCamerPos() { return Vector(camera_eye_x, camera_eye_y, camera_eye_z); }
+	Vector getCamerDir() { return Vector(camera_eye_x + Front.x - camera_eye_x, 
+								camera_eye_y + Front.y - camera_eye_y, 
+								camera_eye_z + Front.z - camera_eye_z).unitvector(); }
+	double getPressTime() {
+		if (pressTime < 1.0) return 1.0;
+		else return pressTime;
+	}
 
   private:
 
@@ -114,8 +136,21 @@ class PbaViewer
     float camera_up_x, camera_up_y, camera_up_z;
     float camera_right_x, camera_right_y, camera_right_z;
 
+	// Euler Angles
+	float Yaw;
+	float Pitch;
+	glm::vec3 Front;
+	glm::vec3 Up;
+	glm::vec3 Right;
+	glm::vec3 WorldUp;
+	bool firstMouse = true;
+	double pressTime;
+
     void ComputeEyeUpRight(int dx, int dy);
     void ComputeEyeShift(float dz);
+	void ProcessKeyboard(Camera_Movement direction, float dt);
+	void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
+	void updateCameraVectors();
 
     // These are the objects that do the important processing. 
     std::vector<pba::PbaThing> things;

@@ -31,9 +31,6 @@
   #include <GL/glut.h> // GLUT support library.
 #endif
 
-
-
-
 #include <iostream>
 #include <cmath>
 #include "PbaViewer.h"
@@ -67,6 +64,12 @@ void cbMotionFunc( int x, int y )
    
    PbaViewer::Instance() -> Motion( x, y );
    glutPostRedisplay();
+}
+
+void cbPassiveMotionFunc(int x, int y)
+{
+	PbaViewer::Instance()->PassiveMotion(x, y);
+	glutPostRedisplay();
 }
 
 void cbMouseFunc( int button, int state, int x, int y )
@@ -106,7 +109,13 @@ PbaViewer::PbaViewer() :
    camera_up_z    (0.0),
    camera_right_x (1.0),
    camera_right_y (0.0),
-   camera_right_z (0.0)
+   camera_right_z (0.0),
+	WorldUp			(glm::vec3(0.0f, 1.0f, 0.0f)),
+	Yaw				(90.0f),
+	Pitch			(0.0f),
+	Front			(glm::vec3(0.0f, 0.0f, -1.0f)),
+	pressTime		(0.0)
+
 {
    cout << "PbaViewer Loaded\n";
 }
@@ -127,7 +136,7 @@ void PbaViewer::Init( const std::vector<std::string>& args )
    glutInitDisplayMode( display_mode );
    glutInitWindowSize( width, height );
    glutCreateWindow( title.c_str() );
-   glClearColor(0.5,0.5,0.6,0.0);
+   glClearColor(0.2,0.2,0.3,0.0);
 
    camera_aspect = (float)width/(float)height;
 
@@ -135,6 +144,7 @@ void PbaViewer::Init( const std::vector<std::string>& args )
    glutIdleFunc( &cbIdleFunc );
    glutKeyboardFunc( &cbKeyboardFunc );
    glutMotionFunc( &cbMotionFunc );
+   glutPassiveMotionFunc(&cbPassiveMotionFunc);
    glutMouseFunc( &cbMouseFunc );
    glutReshapeFunc( &cbReshapeFunc );
 
@@ -157,13 +167,24 @@ void PbaViewer::Display()
 {
    glLoadIdentity();
    gluPerspective( camera_fov, camera_aspect, camera_near, camera_far );
-   gluLookAt( camera_eye_x, camera_eye_y, camera_eye_z,    // Camera eye point
-               camera_view_x, camera_view_y, camera_view_z, // Camera view point
-               camera_up_x, camera_up_y, camera_up_z        // Camera up direction
-             );
+   gluLookAt(camera_eye_x, camera_eye_y, camera_eye_z,							// Camera eye point
+	   camera_eye_x + Front.x, camera_eye_y + Front.y, camera_eye_z + Front.z,	// Camera view point
+	   Up.x, Up.y, Up.z															// Camera up direction
+   );
 
    glEnable(GL_DEPTH_TEST);
    glDepthRange( camera_near, camera_far );
+
+   if (button == GLUT_LEFT_BUTTON)
+   {
+	   if (mouse_state == GLUT_DOWN)
+	   {
+		   pressTime += 0.02;
+		   std::cout << " " << pressTime << std::endl;
+	   }
+	   else
+		   pressTime = 0;
+   }
 
    for( size_t i=0;i<things.size();i++)
    {
@@ -194,7 +215,15 @@ void PbaViewer::Keyboard( unsigned char key, int x, int y )
 
    switch (key)
    {
-      case 'f':
+		case 'w':ProcessKeyboard(FORWARD, 0.1f);
+			break;
+		case 's':ProcessKeyboard(BACKWARD, 0.1f);
+			break;
+		case 'a':ProcessKeyboard(LEFT, 0.1f);
+			break;
+		case 'd':ProcessKeyboard(RIGHT, 0.1f);
+			break;
+	 case 'f':
          camera_fov /= 1.01;
          break;
       case 'F':
@@ -257,8 +286,32 @@ void PbaViewer::Motion( int x, int y )
 }
 
 
+void PbaViewer::PassiveMotion(int x, int y)
+{
+	if (firstMouse)
+	{
+		mouse_x = x;
+		mouse_y = y;
+		firstMouse = false;
+	}
+
+	float xoffset = x - mouse_x;
+	float yoffset = y - mouse_y; // reversed since y-coordinates go from bottom to top
+
+	mouse_x = x;
+	mouse_y = y;
+
+	ProcessMouseMovement(xoffset, -yoffset);
+}
+
 void PbaViewer::Mouse( int b, int state, int x, int y )
 {
+	float dx = x - mouse_x;
+	float dy = y - mouse_y;
+	float pos_x = current_raster_pos[0] + dx;
+	float pos_y = current_raster_pos[1] - dy;
+	glRasterPos2f(pos_x, pos_y);
+
    mouse_x = x;
    mouse_y = y;
    keystate = glutGetModifiers();
@@ -297,6 +350,14 @@ void PbaViewer::Usage()
    }
 }
 
+void PbaViewer::sendMessage(unsigned int _messgae)
+{
+	for (size_t i = 0; i < things.size(); i++)
+	{
+		things[i]->messageEvent(_messgae);
+	}
+}
+
 void PbaViewer::Reset()
 {
    std::cout << "Reset\n";
@@ -308,22 +369,28 @@ void PbaViewer::Reset()
 
 void PbaViewer::Home()
 {
-   std::cout << "Home\n";
-   camera_fov     = 120.0;
-   camera_near    = 0.01;
-   camera_far     = 100.0;
+//    std::cout << "Home\n";
+//    camera_fov     = 120.0;
+//    camera_near    = 0.01;
+//    camera_far     = 100.0;
    camera_eye_x   = 0.0;
    camera_eye_y   = 0.0;
    camera_eye_z   = -5.0;
-   camera_view_x  = 0.0;
-   camera_view_y  = 0.0;
-   camera_view_z  = 0.0;
-   camera_up_x    = 0.0;
-   camera_up_y    = 1.0;
-   camera_up_z    = 0.0;
-   camera_right_x = 1.0;
-   camera_right_y = 0.0;
-   camera_right_z = 0.0;
+//    camera_view_x  = 0.0;
+//    camera_view_y  = 0.0;
+//    camera_view_z  = 0.0;
+//    camera_up_x    = 0.0;
+//    camera_up_y    = 1.0;
+//    camera_up_z    = 0.0;
+//    camera_right_x = 1.0;
+//    camera_right_y = 0.0;
+//    camera_right_z = 0.0;
+
+   WorldUp = (glm::vec3(0.0f, 1.0f, 0.0f));
+   Yaw = (90.0f);
+   Pitch = (0.0f);
+   Front = (glm::vec3(0.0f, 0.0f, -1.0f));
+   pressTime = (0.0);
  
    for( size_t i=0;i<things.size();i++)
    {
@@ -420,6 +487,65 @@ void PbaViewer::ComputeEyeShift(float dz)
    camera_eye_x += dz*vvx;
    camera_eye_y += dz*vvy;
    camera_eye_z += dz*vvz;
+}
+
+void PbaViewer::ProcessKeyboard(Camera_Movement direction, float dt)
+{
+	float velocity = 1.0f * dt;
+	if (direction == FORWARD) {
+		camera_eye_x += (Front * velocity).x;
+		camera_eye_y += (Front * velocity).y;
+		camera_eye_z += (Front * velocity).z;
+	}
+	if (direction == BACKWARD) {
+		camera_eye_x -= (Front * velocity).x;
+		camera_eye_y -= (Front * velocity).y;
+		camera_eye_z -= (Front * velocity).z;
+	}
+	if (direction == LEFT) {
+		camera_eye_x -= (Right * velocity).x;
+		camera_eye_y -= (Right * velocity).y;
+		camera_eye_z -= (Right * velocity).z;
+	}
+	if (direction == RIGHT) {
+		camera_eye_x += (Right * velocity).x;
+		camera_eye_y += (Right * velocity).y;
+		camera_eye_z += (Right * velocity).z;
+	}
+}
+
+void PbaViewer::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch /*= true*/)
+{
+	xoffset *= .8f/*0.1f*/;
+	yoffset *= .8f/*0.1f*/;
+
+	Yaw += xoffset;
+	Pitch += yoffset;
+
+	// Make sure that when pitch is out of bounds, screen doesn't get flipped
+	if (constrainPitch)
+	{
+		if (Pitch > 89.0f)
+			Pitch = 89.0f;
+		if (Pitch < -89.0f)
+			Pitch = -89.0f;
+	}
+
+	// Update Front, Right and Up Vectors using the updated Euler angles
+	updateCameraVectors();
+}
+
+void PbaViewer::updateCameraVectors()
+{
+	// Calculate the new Front vector
+	glm::vec3 front;
+	front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+	front.y = sin(glm::radians(Pitch));
+	front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+	Front = glm::normalize(front);
+	// Also re-calculate the Right and Up vector
+	Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	Up = glm::normalize(glm::cross(Right, Front));
 }
 
 void PbaViewer::AddThing( pba::PbaThing& t ) 

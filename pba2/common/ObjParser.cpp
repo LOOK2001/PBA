@@ -4,7 +4,7 @@
 const bool pba::ObjParser::ParseFile(const string& filename)
 {
 	mesh = meshData();
-	parser.ParseFile(filename, mesh);
+	return parser.ParseFile(filename, mesh);
 
 	return false;
 }

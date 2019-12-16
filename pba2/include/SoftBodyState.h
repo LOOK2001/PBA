@@ -47,7 +47,7 @@ namespace pba
 
 	SoftBodyState copy(const SoftBodyState d);
 
-	SoftBodyState GeneratePlanarSoftBody(const pba::Vector& llc, const pba::Vector& urc, int nx, int ny);
+	SoftBodyState GeneratePlanarSoftBody(const pba::Vector& llc, const pba::Vector& urc, int nx, int ny, bool horz = true);
 }
 
 #endif // __PBA_SOFTBODYSTATE_H__

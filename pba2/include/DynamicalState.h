@@ -49,6 +49,11 @@ class DSAttribute
           data[i] = defVal;
        }
     }
+	void erase(size_t n)
+	{
+		if (data.size() >= n) { return; }
+		data.erase(data.begin() + (n-1));
+	}
     void clear() { data.clear(); }
     const std::string& attr_name() const { return name; }
     const T& default_value() const { return defVal; }
@@ -82,6 +87,7 @@ class DynamicalStateData
 
     const size_t add();
     const size_t add( const size_t nb );
+	void erase(const size_t n);
     size_t nb() const;
 
     const int& get_int_attr( const std::string& nam, const size_t p ) const;

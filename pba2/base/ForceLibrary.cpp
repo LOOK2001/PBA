@@ -3,6 +3,7 @@
 #include "Strut.h"
 #include "PbaUtils.h"
 
+
 void pba::SimpleGravityForce::compute(pba::DynamicalState& pq, const double dt)
 {
 #pragma omp parallel for

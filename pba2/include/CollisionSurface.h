@@ -65,6 +65,8 @@ namespace pba {
 
 		void decay();
 
+		void translate(const Vector& _trans);
+
 	private:
 		bool visible;
 		bool wireframe;

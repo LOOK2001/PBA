@@ -12,6 +12,11 @@ namespace pba {
 	class CollisionTriangleRaw
 	{
 	public:
+		enum CollisionType
+		{
+			WALL,
+			TARGET
+		};
 		CollisionTriangleRaw(const Vector& p0, const Vector& p1, const Vector& p2);
 		~CollisionTriangleRaw() {}
 
@@ -45,6 +50,16 @@ namespace pba {
 
 		void set_orientation(const Vector& P);
 
+		void set_collision_type(CollisionType _type) { collType = _type; }
+		CollisionType get_collision_type() { return collType; }
+
+		void translate(const Vector& trans)
+		{
+			P0 += trans;
+			P1 += trans;
+			P2 += trans;
+		}
+
 	private:
 		Vector P0;
 		Vector P1;
@@ -59,6 +74,8 @@ namespace pba {
 		Color litcolor;
 		float decayrate;
 		bool visible;
+
+		CollisionType collType;
 		
 		//AABB aa_bb;
 

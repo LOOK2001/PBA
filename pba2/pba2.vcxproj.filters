@@ -232,9 +232,6 @@
     <ClInclude Include="include\Strut.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="things\BouncingRBD.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\CollisionSphere.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -252,6 +249,18 @@
     </ClInclude>
     <ClInclude Include="things\SBDAreaCloth.h">
       <Filter>things</Filter>
+    </ClInclude>
+    <ClInclude Include="things\BouncingGame.h">
+      <Filter>things</Filter>
+    </ClInclude>
+    <ClInclude Include="things\BouncingRBD.h">
+      <Filter>things</Filter>
+    </ClInclude>
+    <ClInclude Include="things\ClothSphereGame.h">
+      <Filter>things</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Common.h">
+      <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

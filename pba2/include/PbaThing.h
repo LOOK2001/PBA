@@ -78,6 +78,8 @@ class PbaThingyDingy
     //! Set the length of time for a time step
     void SetSimulationTimestep( const double v ){ dt = v; }
 
+	virtual void messageEvent(unsigned int _message) {}
+
   protected:
 
     bool visible;

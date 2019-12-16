@@ -145,6 +145,28 @@ const size_t DynamicalStateData::add( const size_t nb )
    return add_size-1; // return the index of the last particle
 }
 
+void DynamicalStateData::erase(const size_t n)
+{
+	for (std::map<std::string, DSAttribute<int> >::iterator a = int_attributes.begin(); a != int_attributes.end(); a++)
+	{
+		a->second.erase(n);
+	}
+	for (std::map<std::string, DSAttribute<float> >::iterator a = float_attributes.begin(); a != float_attributes.end(); a++)
+	{
+		a->second.erase(n);
+	}
+	for (std::map<std::string, DSAttribute<Vector> >::iterator a = vector_attributes.begin(); a != vector_attributes.end(); a++)
+	{
+		a->second.erase(n);
+	}
+	for (std::map<std::string, DSAttribute<Color> >::iterator a = color_attributes.begin(); a != color_attributes.end(); a++)
+	{
+		a->second.erase(n);
+	}
+	nb_items = nb_items - 1;
+	re_find_main_attrs();
+}
+
 size_t DynamicalStateData::nb() const { return nb_items; }
 
 const int& DynamicalStateData::get_int_attr( const std::string& nam, const size_t p ) const

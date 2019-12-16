@@ -153,6 +153,17 @@ void pba::CollisionSurfaceRaw::set_up_aabb()
 	aa_bb = AABB(llc, urc);
 }
 
+void pba::CollisionSurfaceRaw::translate(const Vector& _trans)
+{
+	for (auto tri : tri_elements)
+	{
+		for (size_t i = 0; i < 3; i++)
+		{
+			tri->translate(_trans);
+		}
+	}
+}
+
 pba::CollisionSurface pba::makeCollisionSurface()
 {
 	return CollisionSurface(new CollisionSurfaceRaw);

@@ -21,6 +21,10 @@ void pba::AdvanceSoftBodyVelocity::solve(const double dt)
 		Vector _vel = PQ->vel(i) + PQ->accel(i) * dt;
 		PQ->set_vel(i, _vel);
 	}
+
+	for (auto fixed : m_fixedId) {
+		PQ->set_vel(fixed, Vector(0.0, 0.0, 0.0));
+	}
 }
 
 pba::GISolver pba::CreateAdvanceRotation(SoftBodyState& pq)

@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <memory>
+#include <vector>
 
 namespace pba{
 	class GISolverBase
@@ -13,6 +14,11 @@ namespace pba{
 		virtual void init() = 0;
 		virtual void solve(const double dt) = 0;
 		virtual ~GISolverBase() {}
+
+		void addFixedId(size_t i) { m_fixedId.push_back(i); }
+
+	public:
+		std::vector<size_t> m_fixedId;
 	};
 
 	typedef std::shared_ptr<GISolverBase> GISolver;
